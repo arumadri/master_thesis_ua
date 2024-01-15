@@ -1,5 +1,5 @@
 # master_thesis_ua
-Code for master thesis on modelling the cost-effectiveness of RSV interventions in Europe. 
+## Code for master thesis on modelling the cost-effectiveness of RSV interventions in Europe. 
 RSV causes acute lower respiratory tract infections (ALRI) in people of all ages, but especially in children under 5 years and the elderly. New monoclonal antibodies (MAbs) (offering rapid immune protection to infants) and maternal vaccines (conferring protection to infants through placental transfer of antibodies) are becoming available. Recently, a maternal vaccine (Abrysvo) and a monoclonal antibody (Nirsevimab) have demonstrated short-term efficacy in phase 3 trials and have been approved for use against RSV in infants. Additonally, Abrysvo is also available for the elderly. 
 
 In this project, I will assess the impact and cost-effectiveness of these new interventions taking into account waning immunity and herd immunity using a whole-population-wide age-startified compartmental model of selected countries in Europe. This work is part of my Master of Epidemiology at the University of Antwerp and is conducted with supervision of [Professor Lander Willem](https://www.uantwerpen.be/en/staff/lander-willem/) at the Centre for Health Economics and Modelling of Infectious Diseases (CHERMID) at the University of Antwerp, Belgium. 
