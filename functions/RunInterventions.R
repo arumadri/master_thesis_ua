@@ -1,5 +1,8 @@
+### source functions 
+# source("/Users/vincentarumadri/Desktop/Epi/Modelling/master_thesis_ua/functions/ODE_desc.R")
+
 ############### CwX Contacts for persons who are cocooned ###############
-get_cwn <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, nwn_p, pwn_p, cnt_matrix_c, nwn_c, pwn_c) {
+get_cwn <- function(prop_c, s) {
   cwn_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -59,7 +62,7 @@ get_cwn <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, nwn_p, pwn_p, cn
   return(cwn_e)
 }
 ####
-get_cwp <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, p_mat, pwp_p, cnt_matrix_c, pwp_c) {
+get_cwp <- function(prop_c, s) {
   cwp_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -95,7 +98,7 @@ get_cwp <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, p_mat, pwp_p, cn
   return(cwp_e)
 }
 ####
-get_cwc <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, nwn_p, pwp_p, cnt_matrix_c, nwn_c, pwp_c, p_mat) {
+get_cwc <- function(prop_c, s) {
   cwc_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -155,7 +158,7 @@ get_cwc <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, nwn_p, pwp_p, cn
   return(cwc_e)
 }
 ###### PwX Contacts for persons who are mothers but not cocooned  #######
-get_pwn <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, pwn_p, cnt_matrix_c, pwn_c) {
+get_pwn <- function(prop_c, s) {
   pwn_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -191,7 +194,7 @@ get_pwn <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, pwn_p, cnt_matri
   return(pwn_e)
 }
 ####
-get_pwp <- function(prop_c, s, A, pwp_p, pwp_c) {
+get_pwp <- function(prop_c, s) {
   pwp_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -215,7 +218,7 @@ get_pwp <- function(prop_c, s, A, pwp_p, pwp_c) {
   return(pwp_e)
 }
 ####
-get_pwc <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, pwn_p, cnt_matrix_c, cnt_matrix_c_h, pwn_c) {
+get_pwc <- function(prop_c, s) {
   pwc_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -251,7 +254,7 @@ get_pwc <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, pwn_p, cnt_matri
   return(pwc_e)
 }
 ##### NwX Contacts for persons who are neither cocooned nor mothers #####
-get_nwn <- function(prop_c, s, A, nwn_p, nwn_c) {
+get_nwn <- function(prop_c, s) {
   nwn_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -279,7 +282,7 @@ get_nwn <- function(prop_c, s, A, nwn_p, nwn_c) {
   return(nwn_e)
 }
 ####
-get_nwp <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, cnt_matrix_c, cnt_matrix_c_h, p_mat) {
+get_nwp <- function(prop_c, s) {
   nwp_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -311,7 +314,7 @@ get_nwp <- function(prop_c, s, A, cnt_matrix_p, cnt_matrix_p_h, cnt_matrix_c, cn
   return(nwp_e)
 }
 ####
-get_nwc <- function(prop_c, s, A, nwn_p, cnt_matrix_p, cnt_matrix_p_h, p_mat, nwn_c, cnt_matrix_c, cnt_matrix_c_h) {
+get_nwc <- function(prop_c, s) {
   nwc_e <- matrix(0, nrow = A, ncol = A)
   
   if (s == 'p') {
@@ -352,62 +355,43 @@ get_nwc <- function(prop_c, s, A, nwn_p, cnt_matrix_p, cnt_matrix_p_h, p_mat, nw
   
   return(nwc_e)
 }
-# Initialize vectors
-populationPerAgeGroup <- numeric()
+
+populationPerAgeGroup <- uk_data_sum$populationAgeGroup
 eta <- numeric()
-modelIncidencePerTime <- numeric()
-pA <- numeric()
-ep_t <- numeric()
-
-# Initialize numeric variables
-dailyBirthRate <- 0
-totPopulation <- 0
-valueLogLikelihood <- 0
-
-# Defined later but of size A
-currentODETime <- 0
-run_start <- 0
-run_burn <- 0
-run_full <- 0
-dt <- 0
-
-# Initialize ageStratification as a numeric vector
-ageStratification <- numeric()
-
-# Initialize integer variables
-dayNoAfterBurn <- 0
-weekNo <- 0
-monthNo <- 0
 ################ RunInterventions ###################
-RunInterventions <- function(dailyBirthRate_t, totPopulation_t, ageStratification_t) {
-  # variables 
-  dailyBirthRate <- dailyBirthRate_t
-  totPopulation <- totPopulation_t
-  ageStratification <- ageStratification_t
+RunInterventions_func <- function(dailyBirthRate, totPopulation, ageStratification) {
+  dailyBirthRate <- dailyBirthRate
+  totPopulation <- totPopulation
+  ageStratification <- ageStratification
+  
   A <- length(ageStratification)
-  eta <- numeric(A)
-  populationPerAgeGroup <- numeric(A)
-  modelIncidencePerTime <- numeric(A)
-  eta[1] <- 0
+  eta <- c(0) 
+  populationPerAgeGroup <- c() 
+  modelIncidencePerTime <- c() 
   
-  # Using for loop for calculations
-  for (i in 1:(A - 1)) {
-    populationPerAgeGroup[i] <- dailyBirthRate * 365 * (ageStratification[i + 1] - ageStratification[i])
-    eta[i + 1] <- 1.0 / (365.0 * (ageStratification[i + 1] - ageStratification[i]))
+  for (i in 1:(A-1)) {
+    populationPerAgeGroup <- c(populationPerAgeGroup, dailyBirthRate*365*(ageStratification[i+1] - ageStratification[i]))
+    eta <- c(eta, 1.0/(365.0*(ageStratification[i+1] - ageStratification[i])))
+    modelIncidencePerTime <- c(modelIncidencePerTime, 0)
   }
-  modelIncidencePerTime[1:(A - 1)] <- 0
-  populationPerAgeGroup[A] <- totPopulation - (dailyBirthRate * 365) * ageStratification[A]
-  eta[A] <- dailyBirthRate / (totPopulation - (dailyBirthRate * 365) * ageStratification[A])
-  modelIncidencePerTime[A] <- 0
   
-  # Other variables 
+  modelIncidencePerTime <- c(modelIncidencePerTime) 
+  populationPerAgeGroup <- c(populationPerAgeGroup, totPopulation - (dailyBirthRate*365)*ageStratification[A])
+  eta <- c(eta, dailyBirthRate / (totPopulation - (dailyBirthRate*365)*ageStratification[A]))
+  
   dt <- 1
   currentODETime <- 0
   dayNoAfterBurn <- 0
   valueLogLikelihood <- 0
   
-  # new values
-  list(
+  rg <- 45
+  sg <- rg * 3
+  ag <- sg * 6 + 23
+  
+  return(list(
+    dailyBirthRate = dailyBirthRate,
+    totPopulation = totPopulation,
+    ageStratification = ageStratification,
     A = A,
     eta = eta,
     populationPerAgeGroup = populationPerAgeGroup,
@@ -415,14 +399,13 @@ RunInterventions <- function(dailyBirthRate_t, totPopulation_t, ageStratificatio
     dt = dt,
     currentODETime = currentODETime,
     dayNoAfterBurn = dayNoAfterBurn,
-    valueLogLikelihood = valueLogLikelihood
-  )
+    valueLogLikelihood = valueLogLikelihood,
+    rg = rg,
+    sg = sg,
+    ag = ag
+  ))
 }
 
-# initialise pVHR, pHR, pLR
-pVHR <- numeric() 
-pHR <- numeric()   
-pLR <- numeric()
 ####
 ParameterValuesforODE <- function(currentParamValues) {
   if(length(currentParamValues) != 25) {
@@ -440,39 +423,46 @@ ParameterValuesforODE <- function(currentParamValues) {
   # Define and compute ep_t and pA
   ep_t <- numeric(25)
   pA <- numeric(25)
+  parameterValues <- parameterValuesTemp
   
   for (a in 1:16) {
-    ep_t[a] <- exp(parameterValuesTemp["c5ep1"] + (a - 1) * parameterValuesTemp["c5ep2"])
+    ep_t[a] <- exp(parameterValues["c5ep1"] + (a - 1) * parameterValues["c5ep2"])
   }
   for (a in 17:23) {
-    ep_t[a] <- parameterValuesTemp["ep5"]
+    ep_t[a] <- parameterValues["ep5"]
   }
   for (a in 24:25) {
-    ep_t[a] <- parameterValuesTemp["ep6"]
+    ep_t[a] <- parameterValues["ep6"]
   }
   
-  pA[1:12] <- rep(parameterValuesTemp["pA1"], 12)
-  pA[13:16] <- rep(parameterValuesTemp["pA2"], 4)
-  pA[17:18] <- rep(parameterValuesTemp["pA3"], 2)
-  pA[19:25] <- rep(parameterValuesTemp["pA4"], 7)
+  pA[1:12] <- rep(parameterValues["pA1"], 12)
+  pA[13:16] <- rep(parameterValues["pA2"], 4)
+  pA[17:18] <- rep(parameterValues["pA3"], 2)
+  pA[19:25] <- rep(parameterValues["pA4"], 7)
   
-  list(ep_t = ep_t, pA = pA, parameterValues = parameterValuesTemp)
+  assign("ep_t", ep_t, envir = .GlobalEnv)
+  assign("pA", pA, envir = .GlobalEnv)
+  assign("parameterValues", parameterValues, envir = .GlobalEnv)
+  
 }
 initial_M <- function(parameterValues, ageStratification, populationPerAgeGroup) {
-  xi <- 1.0 / parameters["xi"]
+  xi <- 1.0 / parameterValues[['xi']]
   
-  init_con <- numeric(length(ageStratification) - 1)
+  init_con <- numeric(0)
   
   for (i in 1:(length(ageStratification) - 1)) {
-    cdf_upper <- pexp(365 * ageStratification[i + 1], rate = xi)
-    cdf_lower <- pexp(365 * ageStratification[i], rate = xi)
+    
+    cdf_lower <- pexp((365 * ageStratification[i]), rate = xi)
+    cdf_upper <- pexp((365 * ageStratification[i + 1]), rate = xi)
+    
     init_con_temp <- (cdf_upper - cdf_lower) / ((365 * ageStratification[i + 1] - 365 * ageStratification[i]) * xi)
     init_con[i] <- init_con_temp * populationPerAgeGroup[i]
   }
   
-  cdf_upper_last <- pexp(365 * 90, rate = xi)
-  cdf_lower_last <- pexp(365 * ageStratification[length(ageStratification)], rate = xi)
-  init_con[length(init_con)] <- (cdf_upper_last - cdf_lower_last) / ((365 * 90 - 365 * ageStratification[length(ageStratification)]) * xi) * populationPerAgeGroup[length(populationPerAgeGroup)]
+  cdf_last <- pexp(365 * 90, rate = xi) - pexp(365 * ageStratification[length(ageStratification)], rate = xi)
+  last_age_group_init_con <- cdf_last / ((365 * 90 - 365 * ageStratification[length(ageStratification)]) * xi) * populationPerAgeGroup[length(ageStratification)]
+  
+  init_con <- c(init_con, last_age_group_init_con)
   
   return(init_con)
 }
@@ -485,35 +475,35 @@ poisson_cdf <- function(l, a, x) {
   }
 }
 ####
-initialProportionExposure <- function(l, a1, a2, A) {
-  # Assuming poisson_cdf function is already defined
-  prop <- numeric(A)
+initialProportionExposure <- function(l, a1, a2) {
+  prop <- numeric()
   
+  prop <- vector("numeric", 4)
   prop[1] <- abs(poisson_cdf(l, a2, 0) - poisson_cdf(l, a1, 0)) / ((a2 - a1) * l)
   prop[2] <- abs(poisson_cdf(l, a2, 1) - poisson_cdf(l, a1, 1)) / ((a2 - a1) * l)
   prop[3] <- abs(poisson_cdf(l, a2, 2) - poisson_cdf(l, a1, 2)) / ((a2 - a1) * l)
-  prop[4] <- 1 - (prop[3] + prop[2] + prop[1])
+  prop[4] <- 1 - sum(prop[1:3])
   
   return(prop)
 }
 ####
-generateInitialStates <- function(cov_c, A, ageStratification, parameters, populationPerAgeGroup, p_mat, pVHR, pHR, pLR) {
-  populationMatPro <- initial_M(parameters, ageStratification, populationPerAgeGroup)  
-  initialStates <- numeric()
+generateInitialStates <- function(cov_c) {
+  populationMatPro <- initial_M(parameterValues, ageStratification, populationPerAgeGroup)
+  initialStates <- c()
   
-  I1 <- parameters["I1"]
-  I2 <- parameters["I2"]
+  I1 <- parameterValues[["I1"]]
+  I2 <- parameterValues[["I2"]]
   I3 <- 0.5
-  si <- 1.0 / parameters["si"]
-  g0 <- 1.0 / parameters["ga0"]
-  g1 <- 1.0 / (parameters["ga0"] * parameters["g1"])
-  g2 <- 1.0 / (parameters["ga0"] * parameters["g1"] * parameters["g2"])
-  d1 <- parameters["d1"]
-  d2 <- parameters["d1"] * parameters["d2"]
-  d3 <- parameters["d1"] * parameters["d2"] * parameters["d3"]
+  si <- 1.0 / parameterValues[["si"]]
+  g0 <- 1.0 / parameterValues[["ga0"]]
+  g1 <- 1.0 / (parameterValues[["ga0"]] * parameterValues[["g1"]])
+  g2 <- 1.0 / (parameterValues[["ga0"]] * parameterValues[["g1"]] * parameterValues[["g2"]])
+  d1 <- parameterValues[["d1"]]
+  d2 <- parameterValues[["d1"]] * parameterValues[["d2"]]
+  d3 <- parameterValues[["d1"]] * parameterValues[["d2"]] * parameterValues[["d3"]]
   
-  for (a in 1:A) {
-    if (a < A) {
+  for (a in 1:25) {
+    if (a < 25) {
       a1 <- ageStratification[a]
       a2 <- ageStratification[a + 1]
     } else {
@@ -593,93 +583,123 @@ generateInitialStates <- function(cov_c, A, ageStratification, parameters, popul
         )
       }
     }
-    initialStates <- c(initialStates, rep(0, 23)) # inf exposure 1
+    #initialStates <- c(initialStates, rep(0, 23)) # inf exposure 1
   }
   return(initialStates)
 }
 ####
-getWeeklyIncidence <- function(x0, sampleWeeklyIncidence, no_doses, epFlag, A, ep_t, dayNoAfterBurn, weekNo) {
-  
-  if (dayNoAfterBurn == 0) {
+getWeeklyIncidence <- function(x0, sampleWeeklyIncidence, no_doses, epFlag) {
+  if (dayNoAfterBurn %% 365 == 0) {
+    dayNoAfterBurn <- 0
     for (a in 1:A) {
-      # ensure r indexing
-      baseIndex <- 455 * (a - 1) + 72 * 6
-      # Resetting specific elements of x0 to 0
-      x0[baseIndex + 2] <- 0
-      x0[baseIndex + 3] <- 0
-      x0[baseIndex + 4] <- 0
-      x0[baseIndex + 5] <- 0
-      
-      # Resetting a range of elements in x0 to 0
-      for (j in 1:9) {
-        x0[baseIndex + 8 + j] <- 0
-      }
+      indices <- ag*a + sg*6 + 1:4
+      x0[indices] <- 0
+      x0[(ag*a + sg*6 + 8):(ag*a + sg*6 + 16)] <- 0
     }
   }
   
   if (dayNoAfterBurn %% 7 == 0 && dayNoAfterBurn > 0) {
     for (a in 1:A) {
-      baseIndex <- 455 * (a - 1) + 72 * 6
       for (j in 1:9) {
-        incidenceIndex <- baseIndex + 8 + j
+        index <- ag*a + sg*6 + 7 + j
         if (epFlag) {
-          sampleWeeklyIncidence[weekNo, 9 * (a - 1) + j] <- x0[incidenceIndex] * ep_t[a]
+          sampleWeeklyIncidence[weekNo, 9*(a-1) + j] <- x0[index] * ep_t[a]
         } else {
-          sampleWeeklyIncidence[weekNo, 9 * (a - 1) + j] <- x0[incidenceIndex]
+          sampleWeeklyIncidence[weekNo, 9*(a-1) + j] <- x0[index]
         }
-        x0[incidenceIndex] <- 0
+        x0[index] <- 0
       }
-      
-      doseIndices <- (baseIndex + 2):(baseIndex + 5)
-      no_doses[weekNo, 1:4] <- no_doses[weekNo, 1:4] + x0[doseIndices]
-      x0[doseIndices] <- 0
     }
     
+    for (a in 1:A) {
+      indices <- ag*a + sg*6 + 1:4
+      no_doses[weekNo, 1:4] <- no_doses[weekNo, 1:4] + x0[indices]
+      x0[indices] <- 0
+    }
     weekNo <- weekNo + 1
   }
   
   dayNoAfterBurn <- dayNoAfterBurn + 1
   
-  # Return the updated values
-  list(x0 = x0, sampleWeeklyIncidence = sampleWeeklyIncidence, no_doses = no_doses, dayNoAfterBurn = dayNoAfterBurn, weekNo = weekNo)
+  return(list(x0 = x0, 
+              sampleWeeklyIncidence = sampleWeeklyIncidence, 
+              no_doses = no_doses, 
+              dayNoAfterBurn = dayNoAfterBurn, 
+              weekNo = weekNo)) 
 }
 ################ Sample ###################
-####
-Sample <- function(vac_calendar, vac_dose, cov_c, vac_info, posteriors) {
+Sample <- function(vac_calendar, vac_dose, cov_c, vac_info, posteriors, run_start, run_full, run_burn, dt, A, ag, sg, ep_t) {
+  require(deSolve)
   
-  # Restart values
   currentODETime <- run_start
-  inc_tot <- numeric(A)
   weekNo <- 0
   dayNoAfterBurn <- 0
   
-  # Assign parameter values
   currentParamValues <- posteriors
-  ParameterValuesforODE(currentParamValues)
+  ParameterValuesforODE(currentParamValues) 
+  x0 <- generateInitialStates(cov_c)
   
-  # Set up initial states and ODE parameters
-  x0 <- generateInitialStates(cov_c, )
-  ODE_desc_inst <- list(vac_calendar = vac_calendar, vac_dose = vac_dose, vac_info = vac_info, cov_c = cov_c)
+  ODE_desc_inst <- ODE_desc(vac_calendar, vac_dose, vac_info, cov_c)
   
   sampleWeeklyIncidence <- matrix(nrow = 521, ncol = A * 9)
   no_doses <- matrix(nrow = 521, ncol = 4)
   
-  # Run ODE solver (conceptual, using deSolve or similar package)
   while (currentODETime < (run_full + run_burn)) {
     
-    # Update x0 using an ODE solver function (e.g., ode from deSolve)
-    # This is a placeholder - actual implementation depends on the ODE system
-    x0 <- ode(y = x0, times = c(currentODETime, currentODETime + dt), func = ODESystemFunction, parms = ODE_desc_inst)
+    ode_result <- ode(y = x0, times = c(currentODETime, currentODETime + dt), func = model_rsv, parms = ODE_desc_inst)
+    x0 <- ode_result[nrow(ode_result), -1]  
     
     if (currentODETime > run_burn) {
-      results <- getWeeklyIncidence(x0, sampleWeeklyIncidence, no_doses, FALSE, )
+      results <- getWeeklyIncidence(x0, sampleWeeklyIncidence, no_doses, FALSE, dayNoAfterBurn, weekNo, A, ag, sg, ep_t)
       x0 <- results$x0
       sampleWeeklyIncidence <- results$sampleWeeklyIncidence
       no_doses <- results$no_doses
+      dayNoAfterBurn <- results$dayNoAfterBurn
+      weekNo <- results$weekNo
     }
     
     currentODETime <- currentODETime + dt
   }
   
-  list(inci = sampleWeeklyIncidence, doses = no_doses)
+  return(list(inci = sampleWeeklyIncidence, doses = no_doses))
 }
+
+### 
+StatesValues <- function(vac_calendar, vac_dose, cov_c, vac_info, posteriors) {
+  require(deSolve)
+  
+  currentODETime <- run_start
+  inc_tot <- numeric(A) 
+  weekNo <- 0
+  dayNoAfterBurn <- 0
+  
+  currentParamValues <- posteriors 
+  ParameterValuesforODE(currentParamValues)
+  
+  collect_protect <- matrix(0, nrow = 365 * 12 + 365, ncol = 30 * 6)
+  x0 <- generateInitialStates(cov_c) 
+  x0_N <- length(x0)
+  xmat <- matrix(0, nrow = 365 * 12 + 365, ncol = x0_N)
+  
+  ODE_desc_inst <- ODE_desc(vac_calendar, vac_dose, vac_info, cov_c)
+  
+  sampleWeeklyIncidence <- matrix(0, nrow = 521, ncol = A*9)
+  no_doses <- matrix(0, nrow = 521, ncol = 4)
+  
+  while (currentODETime < (run_full + run_burn)) {
+    xmat[currentODETime + 1, ] <- x0 
+
+    run_ode <- ode(y = x0, times = c(currentODETime, currentODETime + dt), func = model_rsv, parms = ODE_desc_inst)
+    x0 <- tail(run_ode[, -1], 1) # Update state based on ODE solution
+    
+    if (currentODETime > run_burn) {
+      
+      getWeeklyIncidence(x0, sampleWeeklyIncidence, no_doses, FALSE)
+    }
+    
+    currentODETime <- currentODETime + dt
+  }
+  
+  return(xmat)
+}
+
