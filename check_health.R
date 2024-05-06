@@ -208,10 +208,6 @@ rsv_model_age <- function(t, state_initial_age, params){
   dV3   = ageV3$dP
   V3    = ageV3$P
   
-  ageZ = update_ages(Z,age_r)
-  dZ   = ageZ$dP
-  Z    = ageZ$P
-  
   # get day of the year
   t1 = t %% 365
   
@@ -314,7 +310,7 @@ rsv_model_age <- function(t, state_initial_age, params){
   dR3 = dR3 + I3*gamma3 + A3*gamma3 - R3*omega
   dV3 = dV3 - V3*waning_rate 
 
-  dZ = dZ + sigma*(E0+E1+E2+E3)
+  dZ = sigma*(E0+E1+E2+E3)
   
   return(list(c(dM,dS0,dE0,dA0,dI0,dR0,dV0,dS1,dE1,dA1,dI1,dR1,dV1,dS2,dE2,dA2,dI2,dR2,dV2,dS3,dE3,dA3,dI3,dR3,dV3,dZ)))
   #})
@@ -335,4 +331,4 @@ run_check <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                  parms = params_check, method = 'ode23')
 
 
-plot(run_check[, 'V01'])
+plot(run_check[, 'V01'], type = 'l', main = "Introduction of Interventions", xlab = "Days", ylab = "Population")

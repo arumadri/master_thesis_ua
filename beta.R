@@ -31,30 +31,23 @@ average_matrix_ranges <- function(data, ranges) {
 contactMatrixPhy <- average_matrix_ranges(uk_data_sum$contactMatrixPhy, ranges = ranges)
 contactMatrixCon <- average_matrix_ranges(uk_data_sum$contactMatrixCon, ranges = ranges)
 
+# lambda 
 
-# initialize list to store lambda for each infection level and age group
-lambda <- matrix(0, nrow = 4, ncol = 5)  
 delta_i <- c(1,0.8908731,0.7912774,0.3428649)
 qp = 0.09711828575 
 qc = 0.99872580464
 
-
-# Preallocate the lambda matrix
 lambda_matrix <- matrix(0, nrow = 5, ncol = 4)
 
-# Loop over each age group 'a' and infection level 'i' to calculate lambda
 for (a in 1:5) {
   for (i in 1:4) {
-    # Calculate the product of delta terms up to the infection level i
+    
     delta_product <- prod(delta_i[1:i])
     
-    # Calculate the time-varying factor
     beta_value = (1 + b1*(1 + exp(-((t1/365.0 - phi))*((t1/365.0 - phi))/(2*psi*psi))))
     
-    # Calculate lambda for the current age group 'a' and infection level 'i'
     lambda_matrix[a, i] <- qp * beta_value * delta_product * summation_matrix[a, i]
   }
 }
 
-# lambda_matrix now contains the lambda values for each age group 'a' and infection level 'i'
 lambda_matrix

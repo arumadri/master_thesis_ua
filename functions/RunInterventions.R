@@ -726,3 +726,184 @@ calculate_foi <- function(t, state_initial_age, contactMatrixPhy, contactMatrixC
   return(lambda_matrix)
 }
 
+calculate_gamma <- function(params) {
+  
+  # parameters from list
+  g0 = params[['g0']]
+  g1 = params[['g1']]
+  g2 = params[['g2']]
+  
+  # new parameters
+  params[['gamma0']] <<- 1/g0
+  params[['gamma1']] <<- 1/(g0*g1)
+  params[['gamma2']] <<- 1/(g0*g1*g2)
+  
+}
+plot_figures <- function(ode_output, programme_name){
+  if (!requireNamespace("tidyverse", quietly = TRUE)) {
+    install.packages("tidyverse")
+    library(tidyverse)
+  }
+  if (!requireNamespace("patchwork", quietly = TRUE)) {
+    install.packages("patchwork")
+    library(patchwork)
+  }
+  
+  ode_output <- as.data.frame(ode_output)
+  programme_name <- as.character(programme_name)
+  
+  # p_maternal
+  p_maternal <- ode_output %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("M1","M2", "M3"))  
+  
+  p_maternal <- ggplot(p_maternal, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Maternal",
+         x = "Time",
+         y = "Population") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
+                       labels = c("1yr", "2", "3", "4", "5") ) +
+    theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
+          axis.text.y=element_text(family="sans",size=7, color = "black"),
+          legend.text=element_text(family="sans",size=8, color = "black"),
+          legend.title=element_text(family="sans",size=8, color = "black"), 
+          plot.tag=element_text(face="bold"),
+          legend.position = "none") 
+  # level 0
+  p_level0 <- ode_output %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("S01", "S02", "S03", "E01", "E02", "E03", "A01", "A02", "A03", 
+                        "I01", "I02", "I03", "R01", "R02", "R03", "V01", "V02", "V03")) %>%
+    mutate(state = factor(state, levels = c("S01", "S02", "S03", "E01", "E02", "E03", "A01", "A02", "A03",
+                                            "I01", "I02", "I03", "R01", "R02", "R03", "V01", "V02", "V03")))
+  
+  p_level0 <- ggplot(p_level0, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 0",
+         x ="",
+         y = "Population",
+         tag = "A") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
+                       labels = c("1yr", "2", "3", "4", "5") ) +
+    theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
+          axis.text.y=element_text(family="sans",size=7, color = "black"),
+          legend.text=element_text(family="sans",size=8, color = "black"),
+          legend.title=element_text(family="sans",size=8, color = "black"),
+          plot.tag=element_text(face="bold"),
+          legend.position = "none") 
+  
+  # level 1
+  p_level1 <- ode_output %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("S11", "S12", "S13", "E11", "E12", "E13", "A11", "A12", "A13", 
+                        "I11", "I12", "I13", "R11", "R12", "R13", "V11", "V12", "V13"))%>%
+    mutate(state = factor(state, levels = c("S11", "S12", "S13", "E11", "E12", "E13", "A11", "A12", "A13",
+                                            "I11", "I12", "I13", "R11", "R12", "R13", "V11", "V12", "V13")))
+  
+  p_level1 <- ggplot(p_level1, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 1",
+         x = "",
+         y = "",
+         tag = "B") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
+                       labels = c("1yr", "2", "3", "4", "5") ) +
+    theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
+          axis.text.y=element_text(family="sans",size=7, color = "black"),
+          legend.text=element_text(family="sans",size=8, color = "black"),
+          legend.title=element_text(family="sans",size=8, color = "black"),
+          plot.tag=element_text(face="bold"),
+          legend.position = "none") 
+  
+  # level 2
+  p_level2 <- ode_output %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("S21", "S22", "S23", "E21", "E22", "E23", "A21", "A22", "A23", 
+                        "I21", "I22", "I23", "R21", "R22", "R23", "V21", "V22", "V23"))%>%
+    mutate(state = factor(state, levels = c("S21", "S22", "S23", "E21", "E22", "E23", "A21", "A22", "A23",
+                                            "I21", "I22", "I23", "R21", "R22", "R23", "V21", "V22", "V23")))
+  
+  p_level2 <- ggplot(p_level2, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 2",
+         x = "time",
+         y = "Population",
+         tag = "C") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
+                       labels = c("1yr", "2", "3", "4", "5") ) +
+    theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
+          axis.text.y=element_text(family="sans",size=7, color = "black"),
+          legend.text=element_text(family="sans",size=8, color = "black"),
+          legend.title=element_text(family="sans",size=8, color = "black"),
+          plot.tag=element_text(face="bold"),
+          legend.position = "none") 
+  
+  # level 3
+  p_level3 <- ode_output %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("S31", "S32", "S33", "E31", "E32", "E33", "A31", "A32", "A33", 
+                        "I31", "I32", "I33", "R31", "R32", "R33", "V31", "V32", "V33"))%>%
+    mutate(state = factor(state, levels = c("S31", "S32", "S33", "E31", "E32", "E33", "A31", "A32", "A33",
+                                            "I31", "I32", "I33", "R31", "R32", "R33", "V31", "V32", "V33")))
+  
+  p_level3 <- ggplot(p_level3, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 3",
+         x = "time",
+         y = "",
+         tag = "D") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
+                       labels = c("1yr", "2", "3", "4", "5") ) +
+    theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
+          axis.text.y=element_text(family="sans",size=7, color = "black"),
+          legend.text=element_text(family="sans",size=8, color = "black"),
+          legend.title=element_text(family="sans",size=8, color = "black"),
+          plot.tag=element_text(face="bold"),
+          legend.position = "none" ) 
+  
+  # joint 
+  plot_base <- (p_level0 | p_level1) / (p_level2 | p_level3)
+  
+  plot_base <- plot_base + plot_annotation(
+    title = programme_name,
+    subtitle = "Five year movement of individuals between disease states and across age groups",
+    theme = theme(
+      plot.title = element_text(family="sans",size=15, color = "black"),
+      plot.subtitle = element_text(family="sans",size=12, color = "black")+
+        theme_classic()
+    )
+  )
+  
+  return(plot_base)
+}
+
+new_cases <- function(ode_output){
+  start_simulation <- (5*365 + 1)
+  end_simulation <- 3650
+  
+  relevant_data <- ode_output[start_simulation:end_simulation, ]
+  
+  daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
+  daily_changes_df <- as.data.frame(daily_changes)
+  
+  new_cases <- colSums(daily_changes)
+  
+  return(new_cases)
+}
+
