@@ -1,6 +1,8 @@
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(viridisLite)
+library(viridis)
 
 # save current table 3 as table 3_1 to avoid losing data
 ### save so it doesnt get overridden by table_3
@@ -13,10 +15,10 @@ long_data_3 <- table_3_1 %>%
 
 # plot proportions
 condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  scale_fill_manual(values = c("Prop.GP" = "black", "Prop.hosp" = "orange", "Prop.death" = "red"),
-                    labels = c("Death", "Hospitalization", "GP visit")) +
-  labs(title = "Proportion of cases averted per intervention",
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
+  scale_fill_manual(values = c("Prop.GP" = "orange", "Prop.hosp" = "red", "Prop.death" = "black"),
+                    labels = c("Prop.GP" = "GP visit", "Prop.hosp" = "Hospitalization", "Prop.death" = "Death")) +
+  labs(title = "Proportion of health outcomes averted per intervention",
        x = "", y = "Percentage (%)", tag = "B") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
@@ -41,7 +43,7 @@ table_3_arrange <- table_3_1 %>%
   mutate(Intervention = factor(Intervention, levels = unique(Intervention)))
 
 cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, fill = Intervention)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
   scale_fill_brewer("seq", direction = -1) +
   labs(title = "Number of cases averted",
        x = "", y = "",
@@ -81,16 +83,19 @@ cost_data <- table_3_2 %>%
                            'Cost_per_Hospitalization' = 'Hospitalization',
                            'Cost_per_Death' = 'Death',
                            'Cost_per_Life_Year_Gained' = 'Life years gained'
-  ))
+  )) %>%
+  filter(Category != "Death") 
 
 # plot
 incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  scale_fill_brewer(palette = "Set3") +
+  scale_fill_viridis_d(option = "viridis") +
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 42052.09, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1, y = 42052.09, label = "£ 42,052.09", vjust = -0.5, color = "black", size = 5) +
+  annotate("text", x = 1.7, y = 5.7e6, label = "£42,052.09 (over twice the willingness-to-pay threshold of £20,000)", vjust = -0.5, color = "black", size = 4) +
+  geom_segment(aes(x = 1.8, y = 2.5e6, xend = 1.8, yend = 42052.09), 
+               arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5, size = 14),

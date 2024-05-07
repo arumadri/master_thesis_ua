@@ -1,4 +1,4 @@
-plot_figures <- function(ode_output, programme_name){
+plot_figures <- function(ode_output, programme_name, subtitle){
   if (!requireNamespace("tidyverse", quietly = TRUE)) {
     install.packages("tidyverse")
     library(tidyverse)
@@ -157,7 +157,7 @@ plot_base <- (p_level0 | p_level1) / (p_level2 | p_level3)
  
 plot_base <- plot_base + plot_annotation(
     title = programme_name,
-    subtitle = "Five year movement of individuals between disease states and across age groups",
+    subtitle = subtitle,
     theme = theme(
       plot.title = element_text(family="sans",size=15, color = "black"),
       plot.subtitle = element_text(family="sans",size=13, color = "black")+

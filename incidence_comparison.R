@@ -15,9 +15,9 @@ incidence_model <- incidence_model %>%
 library(ggplot2)
 
 expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_per_100k, fill = Age_Group)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.6) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
   scale_fill_manual(values = c("0-4yr" = "red", "5-64yr" = "green", "65+yr" = "blue"), 
-                    name = "Age Group",  
+                    name = "",  
                     labels = c("0-4yr", "5-64yr", "65+yr")) +
   labs(title = "Burden by Age Group",
        x = "",
@@ -31,7 +31,7 @@ expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_p
     axis.text.x = element_text(family = "sans", size = 13, color = "black", angle = 0, hjust = 1),
     axis.text.y = element_blank(),
     legend.text = element_text(family = "sans", size = 13, color = "black"),
-    legend.title = element_text(family = "sans", size = 13, face = "bold", color = "black"),
+    legend.title = element_blank(),
     legend.position = "right",
     plot.margin = margin(10, 10, 10, 10),
     plot.background = element_rect(fill = "white", colour = "black"),
