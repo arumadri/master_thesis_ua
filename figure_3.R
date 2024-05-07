@@ -15,7 +15,7 @@ long_data_3 <- table_3_1 %>%
 
 # plot proportions
 condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Metric)) +
-  geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
   scale_fill_manual(values = c("Prop.GP" = "orange", "Prop.hosp" = "red", "Prop.death" = "black"),
                     labels = c("Prop.GP" = "GP visit", "Prop.hosp" = "Hospitalization", "Prop.death" = "Death")) +
   labs(title = "Proportion of health outcomes averted per intervention",
