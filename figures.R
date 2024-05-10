@@ -18,7 +18,7 @@ p_maternal <- ode_output %>%
 
 p_maternal <- ggplot(p_maternal, aes(x = time, y = value, color = state)) +
   geom_line() +
-  geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
   labs(title = "Maternal",
        x = "Time",
        y = "Population") +
@@ -45,7 +45,7 @@ p_level0 <- ode_output %>%
 
 p_level0 <- ggplot(p_level0, aes(x = time, y = value, color = state)) +
   geom_line() +
-  geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
   labs(title = "Exposure level 0",
        x ="",
        y = "Population",
@@ -74,7 +74,7 @@ p_level1 <- ode_output %>%
 
 p_level1 <- ggplot(p_level1, aes(x = time, y = value, color = state)) +
   geom_line() +
-  geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
   labs(title = "Exposure level 1",
        x = "",
        y = "",
@@ -103,7 +103,7 @@ p_level2 <- ode_output %>%
 
 p_level2 <- ggplot(p_level2, aes(x = time, y = value, color = state)) +
   geom_line() +
-  geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
   labs(title = "Exposure level 2",
        x = "Time (years)",
        y = "Population",
@@ -133,7 +133,7 @@ p_level3 <- ode_output %>%
 
 p_level3 <- ggplot(p_level3, aes(x = time, y = value, color = state)) +
   geom_line() +
-  geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+  geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
   labs(title = "Exposure level 3",
        x = "",
        y = "",
@@ -169,7 +169,7 @@ return(plot_base)
 }
 
 ############# plot incidence #############
-plot_incidence <- function(ode_output, programme_name){
+plot_incidence <- function(ode_output, programme_name, subtitle){
   if (!requireNamespace("tidyverse", quietly = TRUE)) {
     install.packages("tidyverse")
     library(tidyverse)
@@ -182,7 +182,7 @@ plot_incidence <- function(ode_output, programme_name){
   ode_output <- as.data.frame(ode_output)
   programme_name <- as.character(programme_name)
   # 0
-  results_base_stable <- as.data.frame(ode_output[1095:1460,])
+  results_base_stable <- as.data.frame(ode_output[2190:3650,])
   results_base_0 <- results_base_stable
   annual_incidence_0 <- results_base_0  %>% 
     gather(key = "state", value = "value", -time) %>% 
@@ -191,7 +191,10 @@ plot_incidence <- function(ode_output, programme_name){
   
   annual_incidence_0 <- ggplot(annual_incidence_0, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 7380), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 446), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 2.38), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 0",
          x = "",
          y = "Population",
@@ -199,8 +202,8 @@ plot_incidence <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(1090,1460), breaks = seq(1095,1460, 90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
@@ -221,7 +224,10 @@ plot_incidence <- function(ode_output, programme_name){
   
   annual_incidence_1 <- ggplot(annual_incidence_1, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 5500), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1920), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 32), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 1",
          x = "",
          y = "",
@@ -229,8 +235,8 @@ plot_incidence <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(1090,1460), breaks = seq(1095,1460, 90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
@@ -250,16 +256,19 @@ plot_incidence <- function(ode_output, programme_name){
   
   annual_incidence_2 <- ggplot(annual_incidence_2, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 3820), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 2760), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 72), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 2",
-         x = "Time (months)",
+         x = "Time (years)",
          y = "Population",
          tag = "C") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(1090,1460), breaks = seq(1095,1460, 90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
@@ -282,7 +291,10 @@ plot_incidence <- function(ode_output, programme_name){
   
   annual_incidence_3 <- ggplot(annual_incidence_3, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E31"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E32"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E33"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 3",
          x = "",
          y = "",
@@ -290,8 +302,8 @@ plot_incidence <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(1090,1460), breaks = seq(1095,1460, 90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
           axis.text.y=element_text(family="sans",size=12, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
@@ -308,7 +320,7 @@ plot_incidence <- function(ode_output, programme_name){
   
   annual_incidence <- annual_incidence + plot_annotation(
     title = programme_name,
-    subtitle = "",
+    subtitle = subtitle,
     theme = theme(
       plot.title = element_text(family="sans",size=16, color = "black", face = "bold"),
       plot.subtitle = element_text(family="sans",size=14, color = "black")+
@@ -333,7 +345,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
   ode_output <- as.data.frame(ode_output)
   programme_name <- as.character(programme_name)
   # 0
-  results_stable <- as.data.frame(ode_output[1095:3650,])
+  results_stable <- as.data.frame(ode_output[2190:3650,])
   results_stable_0 <- results_stable
   compare_incidence_0 <- results_stable_0  %>% 
     gather(key = "state", value = "value", -time) %>% 
@@ -342,7 +354,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
   
   compare_incidence_0 <- ggplot(compare_incidence_0, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 0",
          x = "",
          y = "Population",
@@ -350,7 +362,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650,365),
                        labels = c("0","3", "6", "9", "12") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
@@ -371,7 +383,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
   
   compare_incidence_1 <- ggplot(compare_incidence_1, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 1",
          x = "",
          y = "",
@@ -379,7 +391,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650,365),
                        labels = c("0","3", "6", "9", "12") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
@@ -400,15 +412,15 @@ plot_incidence_comparison <- function(ode_output, programme_name){
   
   compare_incidence_2 <- ggplot(compare_incidence_2, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 2",
-         x = "Time (months)",
+         x = "Time (years)",
          y = "Population",
          tag = "C") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650,365),
                        labels = c("0","3", "6", "9", "12") ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
@@ -431,7 +443,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
   
   compare_incidence_3 <- ggplot(compare_incidence_3, aes(x = time, y = value, color = state)) +
     geom_line() +
-    geom_vline(xintercept = 1095, linetype = "dashed", color = "red") +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 3",
          x = "",
          y = "",
@@ -439,7 +451,7 @@ plot_incidence_comparison <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650,365),
                        labels = c("0","3", "6", "9", "12") ) +
     theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
           axis.text.y=element_text(family="sans",size=12, color = "black"),

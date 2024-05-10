@@ -894,7 +894,7 @@ plot_figures <- function(ode_output, programme_name){
 }
 
 new_cases <- function(ode_output){
-  start_simulation <- (5*365 + 1)
+  start_simulation <- (6*365 + 1)
   end_simulation <- 3650
   
   relevant_data <- ode_output[start_simulation:end_simulation, ]
@@ -907,3 +907,16 @@ new_cases <- function(ode_output){
   return(new_cases)
 }
 
+annual_incidence <- function(ode_output){
+  start_simulation <- (8*365 + 1)
+  end_simulation <- 3285
+  
+  relevant_data <- ode_output[start_simulation:end_simulation, ]
+  
+  daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
+  daily_changes_df <- as.data.frame(daily_changes)
+  
+  new_cases <- colSums(daily_changes)
+  
+  return(new_cases)
+}

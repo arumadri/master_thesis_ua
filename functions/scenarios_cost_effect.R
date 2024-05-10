@@ -20,9 +20,9 @@ params_none$vac_eff3         <- 0
 
 results_base <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_none, method = "ode23")
-# no. of cases # c()
-round(new_cases(results_base), digits = 0) # c(7687394, 2505202, 53501)
-
+# no. of cases 
+round(new_cases(results_base), digits = 0) #  
+# c(6140276,1989860, 42169) 
 # averted c(0,0,0)
 
 #plot
@@ -45,9 +45,9 @@ params_pmab$vac_eff3         <- 0
 results_pmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_pmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_pmab), digits = 0) # c(7703600, 2508361, 53578)
-
-# averted c(16206, 3159, 77)
+round(new_cases(results_pmab), digits = 0)  # 6140276 1989860   42169 
+# c(6131020,1988066,42125)
+# averted c(9256, 1794,44)
 
 
 #plot
@@ -70,12 +70,12 @@ params_nmab$vac_eff3         <- 0
 results_nmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_nmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_nmab), digits = 0) # c(7720458, 2512249, 53820)
-
-# averted c(33064, 7047, 319)
+round(new_cases(results_nmab), digits = 0) # 6140276 1989860   42169
+# c(6037435,1971909,41897)
+# averted c(102841, 17951, 272)
 
 #plot
-plot_figures(results_nmab, programme_name = "Niservimab for infants")
+plot_figures(results_nmab, programme_name = "Niservimab for infants", "nmab")
 
 # mat scenario [Maternal immunization]
 params_mat <- params
@@ -93,12 +93,12 @@ results_mat <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age
                     parms = params_mat, method = "ode23")
 
 # no. of cases 
-round(new_cases(results_mat), digits = 0) # c(7699588, 2552178, 53895)
-
-# averted c(12194,46976,394)
+round(new_cases(results_mat), digits = 0) # 6140276 1989860   42169
+# c(6103018, 1986853, 42055)
+# averted c(37258, 3007, 114)
 
 #plot
-plot_figures(results_mat, programme_name = "Maternal vaccine for mothers and infants")
+plot_figures(results_mat, programme_name = "Maternal vaccine for mothers and infants", "mat")
 
 # old scenario [Older adult vaccination]
 params_old <- params
@@ -115,62 +115,69 @@ params_old$vac_eff3         <- 0.667
 results_old <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                    parms = params_old, method = "ode23")
 # no. of cases 
-round(new_cases(results_old), digits = 0) # c(7687571, 2505379, 53978)
-
-# averted c(177, 177, 477)
+round(new_cases(results_old), digits = 0) # 6140276 1989860   42169
+# c(6140192, 1989802, 41837)
+# averted c(84, 58,332) 
 
 #plot
-plot_figures(results_old, programme_name = "Elderly adult vaccination")
+plot_figures(results_old, programme_name = "Elderly adult vaccination", "old")
 
-# # mat_old scenario [maternal & older adult vaccination]
+# # # mat_old scenario [maternal & older adult vaccination]
 # params_mat_old <- params
-# params_mat_old$waning_rate1 <- 1/180                                  
-# params_mat_old$waning_rate2 <- 1/180                                  
-# params_mat_old$waning_rate3 <- 1/180                                 
-# params_mat_old$uptake1      <- 0.6*0.5                             
-# params_mat_old$uptake2      <- 0.6*0.5                           
-# params_mat_old$uptake3      <- 0.7                                
-# params_mat_old$vac_eff1         <- 0.513                                
-# params_mat_old$vac_eff2         <- 0.717                                   
+# params_mat_old$waning_rate1 <- 1/180
+# params_mat_old$waning_rate2 <- 1/180
+# params_mat_old$waning_rate3 <- 1/180
+# params_mat_old$uptake1      <- 0.6*0.5
+# params_mat_old$uptake2      <- 0.6*0.5
+# params_mat_old$uptake3      <- 0.7
+# params_mat_old$vac_eff1         <- 0.513
+# params_mat_old$vac_eff2         <- 0.717
 # params_mat_old$vac_eff3         <- 0.667
 # 
 # results_mat_old <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
-#                    parms = params_mat_old, method = "ode23")
+#                     parms = params_mat_old, method = "ode23")
 # # no. of cases averted
-# round(new_cases(results_mat_old), digits = 0) # c(7699849, 2552431, 55344)
+# round(new_cases(results_mat_old), digits = 0) # 6140276 1989860   42169
+# # c(6102896, 1986783, 42153)
+# # averted c(37380, 3077, 16)
 # 
-# # averted c(12455, 47229, 1843)
-
-#plot
-# plot_figures(results_mat_old, programme_name = "Maternal and Elderly adult vaccination")
+# #plot
+# plot_figures(results_mat_old, programme_name = "Maternal and Elderly adult vaccination", "mat/old")
 
 ## cost effectiveness
 table_3 <- data.frame(
   Intervention = c("Palivizimab", "Niservimab", "Maternal vaccine","Elderly vaccine", 
                    "Palivizimab", "Niservimab", "Maternal vaccine","Elderly vaccine", 
                    "Palivizimab", "Niservimab", "Maternal vaccine","Elderly vaccine"),
-  'Symptomatic/GP ' = c(149,316,831,12,0,0,0,0,0,0,0,0),
-  'Hosp admission ' = c(66,134,87,1,0,0,0,0,0,0,0,0), 
-  'Death' = c(1,3,4,0,0,0,0,0,0,0,0,0),
-  'Life years gained' = c(85,255,85,0,0,0,0,0,0,0,0,0),
-  'Incr cost GP' = c(885719836, 94608624,34945284, 748472,885719836, 94608624,34945284, 748472,885719836, 94608624,34945284, 748472),
-  'Incr cost hosp'= c(885653685,94475870,34921289,747803.8,885724100,94616699, 34950995, 748904,885724100,94616699, 34950995, 748904),
+  'Symptomatic/GP ' = c(86,908,274,6,0,0,0,0,0,0,0,0),
+  'Hosp admission ' = c(38,419,150,0,0,0,0,0,0,0,0,0), 
+  'Death' = c(1,9,3,0,0,0,0,0,0,0,0,0),
+  'Life years gained' = c(85,680,255,0,0,0,0,0,0,0,0,0),
+  'Incr cost GP' = c(455928453, 64160259,21709587, 385104,455928453, 64160259,21709587, 385104,455928453, 64160259,21709587, 385104),
+  'Incr cost hosp'= c(455890840,63740752,21555517,385320,455930449,94611198, 21718351, 385320,455930449,94611198, 21718351, 385320),
   'Age group' = c('0-4 years','0-4 years','0-4 years','0-4 years','5-64 years','5-64 years','5-64 years','5-64 years','65+','65+','65+','65+'),
-  'No of cases' = c(19442,40430,59564,831,0,0,0,0,0,0,0,0),
-  'Prop hosp' = c(24,49.45,26.2,0.37,0,0,0,0,0,0,0,0),
-  'Prop death'= c(12.5, 37.5,50,0,0,0,0,0,0,0,0,0),
-  'Prop GP' = c(11.39,21.16,63.53,0.92,0,0,0,0,0,0,0,0),
-  'Cases averted' = c(16206,33064,12194,177,3159,7047,46976,177,77,319,394,477)
+  'No of cases' = c(11094,121064,40449,474,0,0,0,0,0,0,0,0),
+  'Prop hosp' = c(6.3,69,24.7,0,0,0,0,0,0,0,0,0),
+  'Prop death'= c(7.69, 69.23,23.08,0,0,0,0,0,0,0,0,0),
+  'Prop GP' = c(6.75,71.27,21.51,0.47,0,0,0,0,0,0,0,0)
+  # 'Cases averted' = c(16206,33064,12194,177,3159,7047,46976,177,77,319,394,477)
 )
+## no. cases averted
+# palivizimab = c(9256, 1794,44)
+# niservimab  = c(102841, 17951, 272)
+# maternal    = c(37258, 3007, 114)
+# elderly     = c(84, 58,332) 
 
-## no. vaxed 
-# palivizimub = (17600*4) + (17500*4) + (19000*4) = 216400
-# niservimab  = (30000*4) + (30000*4) + (35000*4) = 380000
-# maternal    = (11400*4) + (11000*4) + (13000*4) =  141600
-# elderly     = (8*4) + (150*4) + (600*4) = 3032
+## uptake       ## 2490, 2855, 3220
+# palivizimab = (122789.6+121902.7 + 121491.2)*0.9*0.338  = 111393
+# niservimab  = (122789.6+122052 +121928.8)*0.9*0.781  = 257803
+# maternal    = (6078.945+5908.689+6909.682+516.0946+2987.735+7156.22) + 
+#  (6079.589+5889.296+6771.534+522.2232+2985.072+6996.631) 
+# + (6085.24+5887.625+6697.502+529.3+2997.567+6934.407) =  87933
+# elderly     = (1124.06 + 1110.04+ 1106.243)*0.7*0.667 = 1560
 
 ## costs (admin + price )
-# palivizimub = (57.50+4035.50) = 4093
+# palivizimab = (57.50+4035.50) = 4093
 # niservimab  = (11.00+238)     = 249
 # maternal    = (9.00+238)      = 247
 # elderly     = (9.00+238)      = 247
@@ -180,20 +187,20 @@ table_3 <- data.frame(
 
 ### incremental cost 
 ## GP/symptomatic 
- # palivizimub = (216400*4093) - ((97+51+1)*36.00) = 885719836
- # niservimab  = (380000*249)  - ((198+113+5)*36.00) = 94608624
- # maternal    = (141600*247) - ((73+752+6)*36.00)  = 34945284
- # elderly     = (3032*247) - ((1+3+8)*36.00)   = 748472
+ # palivizimab = (111393*4093) - ((56+29+1)*36.00) = 455928453
+ # niservimab  = (257803*249)  - ((617+287+4)*36.00) = 64160259
+ # maternal    = (87933*247) - ((224+48+2)*36.00)  = 21709587
+ # elderly     = (1560*247) - ((0+1+5)*36.00)   = 385104
 
 ## Hosp admin 
 ## < 5 years
-# palivizimub = (216400*4093) - (65*1100.23) = 885653685
-# niservimab  = (380000*249) - (131*1100.23) = 94475870
-# maternal    = (141600*247) - (49*1100.23)  = 34921289
-# elderly     = (3032*247)  - (1*1100.23)   = 747803.8
+# palivizimab = (111393*4093)  - (37*1100.23) = 455890840
+# niservimab  = (257803*249) - (411*1100.23) = 63740752
+# maternal    = (87933*247) - (149*1100.23)  = 21555517
+# elderly     = (1560*247)   - (0*1100.23)   = 385320
 
 ## > 5 years 
-# palivizimub = (216400*4093) - (1*1100.23) = 885724100
-# niservimab  = (380000*249) - (3*1100.23) = 94616699
-# maternal    = (141600*247) - (22*1100.23) = 34950995
-# elderly     = (3032*247) - (0*1100.23)   = 748904
+# palivizimab = (111393*4093) - (1*1100.23) = 455930449
+# niservimab  = (380000*249) - (8*1100.23) = 94611198
+# maternal    = (87933*247) - (1*1100.23) = 21718351
+# elderly     = (1560*247) - (0*1100.23)   = 385320

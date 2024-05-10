@@ -9,7 +9,7 @@ library(viridis)
 write.csv(table_3, file = "table_3_1.csv")
 
 # prepare 
-long_data_3 <- table_3_1 %>%
+long_data_3 <- table_3 %>%
   select(Intervention, Prop.GP, Prop.hosp, Prop.death) %>%
   gather(key = "Metric", value = "Value", -Intervention)
 
@@ -38,7 +38,7 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
         strip.text.x = element_text(size = 5)) 
 
 # plot number of cases by intervention
-table_3_arrange <- table_3_1 %>%
+table_3_arrange <- table_3 %>%
   arrange(desc(No.of.cases)) %>%
   mutate(Intervention = factor(Intervention, levels = unique(Intervention)))
 
@@ -70,9 +70,9 @@ table_3_2 <- table_3 %>%
   mutate(
     Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost.GP / Symptomatic.GP., 0),
     Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost.hosp / Hosp.admission., 0),
-    Cost_per_Death = ifelse(Death > 0, 885725200 / Death, 0),  
-    Cost_per_Life_Year_Gained = ifelse(Life.years.gained > 0, 885725200 / Life.years.gained, 0)
-  )
+    Cost_per_Death = ifelse(Death > 0, 455928453 / Death, 0),  
+    Cost_per_Life_Year_Gained = c(5363864,94353.32,85135.64,0,0,0,0,0,0,0,0,0))
+
 
 # transform the costs 
 cost_data <- table_3_2 %>%
@@ -92,9 +92,9 @@ incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)
   scale_fill_viridis_d(option = "viridis") +
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
-  geom_hline(yintercept = 42052.09, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.7, y = 5.7e6, label = "£42,052.09 (over twice the willingness-to-pay threshold of £20,000)", vjust = -0.5, color = "black", size = 4) +
-  geom_segment(aes(x = 1.8, y = 2.5e6, xend = 1.8, yend = 42052.09), 
+  geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
+  annotate("text", x = 1.38, y = 4e6, label = "£20,000 (willingness-to-pay threshold)", vjust = -0.5, color = "black", size = 4) +
+  geom_segment(aes(x = 1.5, y = 2.5e6, xend = 1.5, yend = 20000), 
                arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
@@ -127,3 +127,19 @@ fig_3 <- figure_3 + plot_annotation(
 fig_3
 
 ggsave("fig3.pdf", plot = fig_3, width = 15, height = 12, dpi = 600, path = "figs/")
+
+# No intervention vs intervention
+
+baseline_incidence <- plot_incidence(results_base, "Baseline: No intervention", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence")
+palivizimab_incidence <- plot_incidence(results_pmab, "Palivizimab", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
+niservimab_incidence <- plot_incidence(results_nmab, "Niservimab", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
+maternal_incidence <- plot_incidence(results_mat, "Maternal vaccine", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
+elderly_incidence <- plot_incidence(results_old, "Elderly vaccine", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
+
+# save in supplementary material 
+ggsave("baseline_incidence.pdf", plot = baseline_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+ggsave("palivizimab_incidence.pdf", plot = palivizimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+ggsave("niservimab_incidence.pdf", plot = niservimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+ggsave("maternal_incidence.pdf", plot = maternal_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+

@@ -1,7 +1,9 @@
+# extract incidence for 1 year from results_base
+annual_incidence(results_base)
 # prepare data from results_base
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
-  Incidence = c(7687394, 2505202, 53501),  # Actual incidence numbers
+  Incidence = c(1531380.51, 494402.44, 10430.79),  # Actual incidence numbers
   Population = 52771252  # Population at risk for each age group
 )
 

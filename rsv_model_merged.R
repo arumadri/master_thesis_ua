@@ -231,18 +231,18 @@ rsv_model_age <- function(t, state_initial_age, params){
   
   year_length = 365
   vac_day = 300 
-  start_year = 4  
-  end_year = 9   
+  start_year = 6  
+  end_year = 10   
   
   # start and end day for vaccination
-  start_vaccination_day = vac_day + (start_year - 1) * year_length
+  start_vaccination_day = vac_day + (start_year * year_length)
   end_vaccination_day = vac_day + (end_year - 1) * year_length
   
   if (t >= start_vaccination_day && t <= end_vaccination_day && abs(t1 - vac_day) <= 1) {
 
-    dV0_vac = (S0 * uptake* vac_eff) + (E0 * uptake* vac_eff) + (A0 * uptake* vac_eff)
-    # V0 = V0 + dV0_vac 
-    dV0 = dV0 + dV0_vac
+    # dV0_vac = ((S0 + E0 + A0) * uptake* vac_eff)
+    # # V0 = V0 + dV0_vac 
+    # dV0 = dV0 + dV0_vac
     dS0_vac = (S0 * uptake* vac_eff)
     # S0 = S0 - dS0_vac 
     dS0 = dS0 - dS0_vac
@@ -252,10 +252,12 @@ rsv_model_age <- function(t, state_initial_age, params){
     dA0_vac = (A0 * uptake* vac_eff)
     # A0 = A0 - dA0_vac
     dA0 = dA0 - dA0_vac
+    dV0_vac = dV0 + dS0_vac + dE0_vac + dA0_vac
+    dV0 = dV0 + dV0_vac
     
-    dV1_vac = (S1 * uptake* vac_eff) + (E1 * uptake* vac_eff) + (A1 * uptake* vac_eff)
-    # V1 = V1 + dV1_vac 
-    dV1 = dV1 + dV1_vac
+    # dV1_vac = ((S1 + E1 + A1) * uptake* vac_eff)
+    # # V1 = V1 + dV1_vac 
+    # dV1 = dV1 + dV1_vac
     dS1_vac = (S1 * uptake* vac_eff)
     # S1 = S1 - dS1_vac 
     dS1 = dS1 - dS1_vac
@@ -265,10 +267,12 @@ rsv_model_age <- function(t, state_initial_age, params){
     dA1_vac = (A1 * uptake* vac_eff)
     # A1 = A1 - dA1_vac
     dA1 = dA1 - dA1_vac
+    dV1_vac = dV1 + dS1_vac + dE1_vac + dA1_vac
+    dV1 = dV1 + dV1_vac
 
-    dV2_vac = (S2 * uptake* vac_eff) + (E2 * uptake* vac_eff) + (A2 * uptake* vac_eff)
-    # V2 = V2 + dV2_vac 
-    dV2 = dV2 + dV2_vac
+    # dV2_vac = ((S2 + E2 + A2) * uptake* vac_eff)
+    # # V2 = V2 + dV2_vac 
+    # dV2 = dV2 + dV2_vac
     dS2_vac = (S2 * uptake* vac_eff)
     # S2 = S2 - dS2_vac 
     dS2 = dS2 - dS2_vac
@@ -278,19 +282,23 @@ rsv_model_age <- function(t, state_initial_age, params){
     dA2_vac = (A2 * uptake* vac_eff)
     # A2 = A2 - dA2_vac
     dA2 = dA2 - dA2_vac
+    dV2_vac = dV2 + dS2_vac + dE2_vac + dA2_vac
+    dV2 = dV2 + dV2_vac
 
-    dV3_vac = (S3 * uptake* vac_eff) + (E3 * uptake* vac_eff) + (A3 * uptake* vac_eff)
-    # V3 = V3 + dV3_vac
-    dV3 = dV3 + dV3_vac
-    dS3_vac = - (S3 * uptake* vac_eff)
-    # S3 = S3 + dS3_vac
-    dS3 = dS3 + dS3_vac
-    dE3_vac = - (E3 * uptake* vac_eff)
-    # E3 = E3 + dE3_vac
-    dE3 = dE3 + dE3_vac
-    dA3_vac = - (A3 * uptake* vac_eff)
-    # A3 = A3 + dA3_vac
-    dA3 = dA3 + dA3_vac
+    # # dV3_vac = ((S3 + E3 + A3) * uptake* vac_eff)
+    # # # V3 = V3 + dV3_vac
+    # # dV3 = dV3 + dV3_vac
+    # dS3_vac = (S3 * uptake* vac_eff)
+    # # S3 = S3 + dS3_vac
+    # dS3 = dS3 - dS3_vac
+    # dE3_vac = (E3 * uptake* vac_eff)
+    # # E3 = E3 + dE3_vac
+    # dE3 = dE3 - dE3_vac
+    # dA3_vac = (A3 * uptake* vac_eff)
+    # # A3 = A3 + dA3_vac
+    # dA3 = dA3 - dA3_vac
+    # dV3_vac = dV3 + dS3_vac + dE3_vac + dA3_vac
+    # dV3 = dV3 + dV3_vac
   }
   
   # beta
@@ -331,9 +339,9 @@ rsv_model_age <- function(t, state_initial_age, params){
   dV2 = dV2 - V2*waning_rate 
   
   dS3 = dS3 + R2*omega + R3*omega - S3*lambda3 + V3*waning_rate
-  dE3 = if_else((E3 < threshold), 0, (dE3 + dE3 + S3*lambda3 - E3*sigma ))
-  dA3 = if_else((A3 < threshold), 0, (dA3 + E3*probA*sigma - A3*gamma3)) 
-  dI3 = if_else((I3 < threshold), 0, (dI3 + E3*(1-probA)*sigma - I3*gamma3))
+  dE3 = dE3 + dE3 + S3*lambda3 - E3*sigma 
+  dA3 = dA3 + E3*probA*sigma - A3*gamma3 
+  dI3 = dI3 + E3*(1-probA)*sigma - I3*gamma3
   dR3 = dR3 + I3*gamma3 + A3*gamma3 - R3*omega
   dV3 = dV3 - V3*waning_rate 
   
