@@ -4,7 +4,7 @@ RSV causes acute lower respiratory tract infections (ALRI) in people of all ages
 
 In this project, I used mathematical modelling to assess the impact and cost-effectiveness of these new interventions taking into account waning immunity and herd immunity using a whole-population-wide age-startified compartmental model of selected countries in England and Wales. This work is an extension of previous study by [Hodgson et al. 2020](https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8) and for fullfilment of my Master of Epidemiology at the University of Antwerp. Supervision by [Professor Lander Willem](https://www.uantwerpen.be/en/staff/lander-willem/) at the Centre for Health Economics and Modelling of Infectious Diseases (CHERMID) at the University of Antwerp, Belgium. 
 
--[RSV_model_schema.pdf](https://github.com/arumadri/master_thesis_ua/files/15475728/RSV_model_schema.pdf)
+![Uploading Screenshot 2024-05-28 at 22.43.25.png…]()
 
 # Implementation guide 
 *Quick instructions*
@@ -13,7 +13,7 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 
 # Overview of files 
 ## /data folder 
-- **posteriors.Rda**, is dataframe which contains posterior distributions from Hodgson et al 2020.
++ **posteriors.Rda**, is dataframe which contains posterior distributions from Hodgson et al 2020.
 + **uk_data_sum.RData**, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
 + **states.csv**, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
 
