@@ -1,6 +1,6 @@
 # master_thesis_ua
 ## Modelling the cost-effectiveness of RSV interventions in England and Wales. 
-RSV causes acute lower respiratory tract infections (ALRI) in people of all ages, but especially in children under 5 years and the elderly. New monoclonal antibodies, offering rapid immune protection to infants, maternal vaccines, conferring protection to infants through placental transfer of antibodies, and elderly vaccines are becoming available. Recently, a maternal vaccine (Abrysvo) and a monoclonal antibody (Nirsevimab) have demonstrated higher efficacy and duration of protection than the current prophlaxis, Palivizumab in phase 3 trials and have been approved for use against RSV in infants by the FDA and EMA since September 2023. 
+RSV causes acute lower respiratory tract infections (ALRI) in people of all ages, but especially in children under 5 years and the elderly. New monoclonal antibodies, offering rapid immune protection to infants, maternal vaccines, conferring protection to infants through placental transfer of antibodies, and elderly vaccines are becoming available. Recently, a maternal vaccine (Abrysvo) and a monoclonal antibody (Nirsevimab) have demonstrated higher efficacy and duration of protection than the current prophlaxis, Palivizumab in phase 3 trials and have been approved for use against RSV in infants by the U.S. FDA and European Medicines Agency since September 2023. 
 
 In this project, I used mathematical modelling to assess the impact and cost-effectiveness of these new interventions taking into account waning immunity and herd immunity using a whole-population-wide age-startified compartmental model of selected countries in England and Wales. This work is an extension of previous study by [Hodgson et al. 2020](https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8) and for fullfilment of my Master of Epidemiology at the University of Antwerp. Supervision by [Professor Lander Willem](https://www.uantwerpen.be/en/staff/lander-willem/) at the Centre for Health Economics and Modelling of Infectious Diseases (CHERMID) at the University of Antwerp, Belgium. 
 
@@ -35,6 +35,8 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 + `incidence_comparison.R`, plotting function for figure 1 in the main outputs.
 + `scenarios_cost_effect.R`, a walkthrough of estimating the impact of the intervention strategies and their cost-effectiveness
 + `tables.R`, a walkthrough of generating all tables in the study.
+
+## /vingettes folder
 
 ## Contact details 
 Please email [varumadri@gmail.com](varumadri@gmail.com) with any queries relating to this code.
