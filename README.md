@@ -4,7 +4,7 @@ RSV causes acute lower respiratory tract infections (ALRI) in people of all ages
 
 In this project, I used mathematical modelling to assess the impact and cost-effectiveness of these new interventions taking into account waning immunity and herd immunity using a whole-population-wide age-startified compartmental model of selected countries in England and Wales. This work is an extension of previous study by [Hodgson et al. 2020](https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8) and for fullfilment of my Master of Epidemiology at the University of Antwerp. Supervision by [Professor Lander Willem](https://www.uantwerpen.be/en/staff/lander-willem/) at the Centre for Health Economics and Modelling of Infectious Diseases (CHERMID) at the University of Antwerp, Belgium. 
 
-!<img width="674" alt="Screenshot 2024-05-28 at 22 43 25" src="https://github.com/arumadri/master_thesis_ua/assets/42062974/3d79b218-7ec0-4e37-9960-ce5dd139c561">
+<img width="674" alt="Screenshot 2024-05-28 at 22 43 25" src="https://github.com/arumadri/master_thesis_ua/assets/42062974/3d79b218-7ec0-4e37-9960-ce5dd139c561">
 
 # Implementation guide 
 *Quick instructions*
