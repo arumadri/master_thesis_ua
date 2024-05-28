@@ -13,25 +13,28 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 
 # Overview of files 
 ## /data folder 
-+ **posteriors.Rda**, is dataframe which contains posterior distributions from Hodgson et al 2020.
-+ **uk_data_sum.RData**, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
-+ **states.csv**, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
++ *posteriors.Rda*, is dataframe which contains posterior distributions from Hodgson et al 2020.
++ *uk_data_sum.RData*, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
++ *states.csv*, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
 
 ## /figs folder 
 + contains main and supplementary plots used in this study.
 
+## /parameter sources folder
++ contains publication sources for costs, model and intervention parameters
+
 ## /functions folder 
-+ **RunInterventions.R**, contains all the funtions used for the analysis, generating tables and figures.
-+ **rsv_model_merged.R**, is the age-startified RSV model used in the analysis.
++ *RunInterventions.R*, contains all the funtions used for the analysis, generating tables and figures.
++ *rsv_model_merged.R*, is the age-startified RSV model used in the analysis.
 
 ## /src folder 
-+ **aging_check.R**, a walkthrough to assess the implementation of the aging process in the model.
-+ **check_health.R**, a walkthrough to assess the implementation of the epidemiological process of the model.
-+ **figure_3.R**, plotting function for figure 3 in the main outputs.
-+ **generate_initial_states.R**, a walkthrough of generating the initial states.
-+ **incidence_comparison.R**, plotting function for figure 1 in the main outputs.
-+ **scenarios_cost_effect.R**, a walkthrough of estimating the impact of the intervention strategies and their cost-effectiveness
-+ **tables.R**, a walkthrough of generating all tables in the study.
++ *aging_check.R*, a walkthrough to assess the implementation of the aging process in the model.
++ *check_health.R*, a walkthrough to assess the implementation of the epidemiological process of the model.
++ *figure_3.R*, plotting function for figure 3 in the main outputs.
++ *generate_initial_states.R*, a walkthrough of generating the initial states.
++ *incidence_comparison.R*, plotting function for figure 1 in the main outputs.
++ *scenarios_cost_effect.R*, a walkthrough of estimating the impact of the intervention strategies and their cost-effectiveness
++ *tables.R*, a walkthrough of generating all tables in the study.
 
 ## Contact details 
 Please email [varumadri@gmail.com](varumadri@gmail.com) with any queries relating to this code.
