@@ -13,7 +13,7 @@ RSV Model schema used for this study.
 
 Clone the repository and look through the RMarkdown files in the /vingettes folder for implementation steps.
 
-# Overview of files 
+## Overview of files 
 ### /data folder 
 + `posteriors.Rda`, is dataframe which contains posterior distributions from Hodgson et al 2020.
 + `uk_data_sum.RData`, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
@@ -40,5 +40,5 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 
 ### /vingettes folder
 
-### Contact details 
+## Contact details 
 Please email [varumadri@gmail.com](varumadri@gmail.com) with any queries relating to this code.
