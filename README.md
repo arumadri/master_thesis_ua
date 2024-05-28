@@ -6,6 +6,8 @@ In this project, I used mathematical modelling to assess the impact and cost-eff
 
 <img width="674" alt="Screenshot 2024-05-28 at 22 43 25" src="https://github.com/arumadri/master_thesis_ua/assets/42062974/a457afba-0d56-4b40-8a76-474e256af441">
 
+RSV Model schema used for this study. 
+
 # Implementation guide 
 *Quick instructions*
 
