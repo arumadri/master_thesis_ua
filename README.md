@@ -13,6 +13,7 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 
 # Overview of files 
 ## /data folder 
++ <span style="background-color: yellow; font-weight: bold;">RunInterventionsClass.R</span>
 + <span *posteriors.Rda* /span>, is dataframe which contains posterior distributions from Hodgson et al 2020.
 + *uk_data_sum.RData*, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
 + *states.csv*, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
