@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(viridisLite)
 library(viridis)
+library(patchwork)
 
 # save current table 3 as table 3_1 to avoid losing data
 ### save so it doesnt get overridden by table_3
@@ -16,7 +17,9 @@ long_data_3 <- table_3 %>%
 # plot proportions
 condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  scale_fill_manual(values = c("Prop.GP" = "orange", "Prop.hosp" = "red", "Prop.death" = "black"),
+  scale_fill_manual(values = c("Prop.GP" = "#fde724", 
+                               "Prop.hosp" = "#440154", 
+                               "Prop.death" = "#20908c"),
                     labels = c("Prop.GP" = "GP visit", "Prop.hosp" = "Hospitalization", "Prop.death" = "Death")) +
   labs(title = "Proportion of health outcomes averted per intervention",
        x = "", y = "Percentage (%)", tag = "B") +
@@ -28,7 +31,7 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
         axis.text.x = element_text(family = "sans", size = 12, color = "black", angle = 45, hjust = 1),
         axis.text.y = element_text(family = "sans", size = 12, color = "black"),
         legend.text = element_text(family = "sans", size = 12, color = "black"),
-        legend.title = element_blank(),  # This line removes the legend title
+        legend.title = element_blank(),  # removes the legend title
         legend.position = "right",
         plot.margin = margin(10, 10, 10, 10),
         plot.background = element_rect(fill = "white", colour = "black"),
@@ -44,8 +47,11 @@ table_3_arrange <- table_3 %>%
 
 cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, fill = Intervention)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
-  scale_fill_brewer("seq", direction = -1) +
-  labs(title = "Number of cases averted",
+  scale_fill_manual(values = c("Palivizumab" = "#4169E1", 
+                               "Niservimab" = "#000080", 
+                               "Maternal vaccine" = "#1f77b4", 
+                               "Elderly vaccine" = "#00BFFF")) +
+  labs(title = "Number of cases averted per intervention",
        x = "", y = "",
        tag = "A") +
   theme_minimal() +
@@ -67,11 +73,12 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
 
 # plot costs 
 table_3_2 <- table_3 %>%
+  # filter(Intervention != "Elderly vaccine") %>%
   mutate(
     Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost.GP / Symptomatic.GP., 0),
     Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost.hosp / Hosp.admission., 0),
-    Cost_per_Death = ifelse(Death > 0, 455928453 / Death, 0),  
-    Cost_per_Life_Year_Gained = c(5363864,94353.32,85135.64,0,0,0,0,0,0,0,0,0))
+    Cost_per_Death = ifelse(Death > 0, 362075963 / Death, 0),  
+    Cost_per_Life_Year_Gained = c(4259717,86946,67561.83,0,0,0,0,0,0,0,0,0))
 
 
 # transform the costs 
@@ -89,11 +96,13 @@ cost_data <- table_3_2 %>%
 # plot
 incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  scale_fill_viridis_d(option = "viridis") +
+  scale_fill_manual(values = c("GP visit" = "#fde724", 
+                               "Hospitalization" = "#440154", 
+                               "Life years gained" = "#20908c")) +
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.38, y = 4e6, label = "£20,000 (willingness-to-pay threshold)", vjust = -0.5, color = "black", size = 4) +
+  annotate("text", x = 1.38, y = 3.5e6, label = "£20,000 (willingness-to-pay threshold)", vjust = -0.5, color = "black", size = 4) +
   geom_segment(aes(x = 1.5, y = 2.5e6, xend = 1.5, yend = 20000), 
                arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
@@ -130,15 +139,15 @@ ggsave("fig3.pdf", plot = fig_3, width = 15, height = 12, dpi = 600, path = "fig
 
 # No intervention vs intervention
 
-baseline_incidence <- plot_incidence(results_base, "Baseline: No intervention", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence")
-palivizimab_incidence <- plot_incidence(results_pmab, "Palivizimab", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
-niservimab_incidence <- plot_incidence(results_nmab, "Niservimab", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
-maternal_incidence <- plot_incidence(results_mat, "Maternal vaccine", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
-elderly_incidence <- plot_incidence(results_old, "Elderly vaccine", "Incidence from year 6 after model stabilization. No transmission in exposure level 3 at this point. Black dotted lines mark lower limit of baseline incidence") 
+baseline_incidence <- plot_incidence(results_base, "Baseline: No intervention", "Black dotted lines mark lower limit of baseline incidence")
+palivizimab_incidence <- plot_incidence(results_pmab, "Palivizumab", "Black dotted lines mark lower limit of baseline incidence") 
+niservimab_incidence <- plot_incidence(results_nmab, "Niservimab", "Black dotted lines mark lower limit of baseline incidence") 
+maternal_incidence <- plot_incidence(results_mat, "Maternal vaccination", "Black dotted lines mark lower limit of baseline incidence") 
+elderly_incidence <- plot_incidence(results_old, "Elderly vaccination", "Black dotted lines mark lower limit of baseline incidence") 
 
 # save in supplementary material 
 ggsave("baseline_incidence.pdf", plot = baseline_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-ggsave("palivizimab_incidence.pdf", plot = palivizimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
+ggsave("palivizumab_incidence.pdf", plot = palivizimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
 ggsave("niservimab_incidence.pdf", plot = niservimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
 ggsave("maternal_incidence.pdf", plot = maternal_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
 ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")

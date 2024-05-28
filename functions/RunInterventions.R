@@ -1,7 +1,5 @@
-### source functions 
-# source("/Users/vincentarumadri/Desktop/Epi/Modelling/master_thesis_ua/functions/ODE_desc.R")
+#### necessary functions ####
 
-####
 ParameterValuesforODE <- function(currentParamValues) {
   if(length(currentParamValues) != 25) {
     stop("currentParamValues must have 25 elements.")
@@ -15,7 +13,7 @@ ParameterValuesforODE <- function(currentParamValues) {
   
   parameterValuesTemp <- setNames(currentParamValues, names(parameterValuesTemp))
   
-  # Define and compute ep_t and pA
+ # initialize 
   ep_t <- numeric(25)
   pA <- numeric(25)
   parameterValues <- parameterValuesTemp
@@ -40,6 +38,7 @@ ParameterValuesforODE <- function(currentParamValues) {
   assign("parameterValues", parameterValues, envir = .GlobalEnv)
   
 }
+
 initial_M <- function(parameterValues, ageStratification, populationPerAgeGroup) {
   xi <- 1.0 / parameterValues[['xi']]
   
@@ -61,7 +60,7 @@ initial_M <- function(parameterValues, ageStratification, populationPerAgeGroup)
   
   return(init_con)
 }
-####
+
 poisson_cdf <- function(l, a, x) {
   if (l == 0.0 || a == 0.0) {
     return(ppois(x, lambda = 0.000001))
@@ -69,7 +68,7 @@ poisson_cdf <- function(l, a, x) {
     return(ppois(x, lambda = l * a))
   }
 }
-####
+
 initialProportionExposure <- function(l, a1, a2) {
   
   prop <- vector("numeric", 4)
@@ -80,7 +79,7 @@ initialProportionExposure <- function(l, a1, a2) {
   
   return(prop)
 }
-####
+
 generateInitialStates <- function(parameterValues, ageStratification, populationPerAgeGroup) {
   
   populationMatPro <- initial_M(parameterValues, ageStratification, populationPerAgeGroup)
@@ -128,602 +127,25 @@ generateInitialStates <- function(parameterValues, ageStratification, population
                          pI2 * age_size * (1 - d1 * I1) * I2,  # R1
                          0, # V1
                          
-                         pI3*age_size*(1.0 - d2*I1)*(1.0-I2),      # S2
+                         pI3*age_size*(1 - d2*I1)*(1.0-I2),      # S2
                          pI3*age_size*d2*I1*si/(si+g2),            # E2
                          pI3*age_size*d2*I1*g2/(si+g2)*pA[a],      # A2
                          pI3*age_size*d2*I1*g2/(si+g2)*(1-pA[a]),  # I2
-                         pI3*age_size*(1.0 - d2*I1)*I2,      # R2
+                         pI3*age_size*(1 - d2*I1)*I2,      # R2
                          0, # V2
                          
-                         pI4*age_size*(1.0 - d3*I1)*(1.0-I2),        # S3
+                         pI4*age_size*(1 - d3*I1)*(1-I2),        # S3
                          pI4*age_size*d3*I1*si/(si+g2),       # E3
                          pI4*age_size*d3*I1*g2/(si+g2)*pA[a], # A3
                          pI4*age_size*d3*I1*g2/(si+g2)*(1-pA[a]),   # I3
-                         pI4*age_size*(1.0 - d3*I1)*I2, # R3
+                         pI4*age_size*(1 - d3*I1)*I2, # R3
                          0,    # V3
                          
                          0  # Z
     )
-    initialStates <- c(initialStates, initialStates_i) # these are vaccine states which are intiially 0
+    initialStates <- c(initialStates, initialStates_i) # these are vaccine states which are intially 0
   }
   return(initialStates)
-}
-
-####
-getWeeklyIncidence <- function(x0, sampleWeeklyIncidence, no_doses, epFlag) {
-  if (dayNoAfterBurn %% 365 == 0) {
-    dayNoAfterBurn <- 0
-    for (a in 1:A) {
-      indices <- ag*a + sg*6 + 1:4
-      x0[indices] <- 0
-      x0[(ag*a + sg*6 + 8):(ag*a + sg*6 + 16)] <- 0
-    }
-  }
-  
-  if (dayNoAfterBurn %% 7 == 0 && dayNoAfterBurn > 0) {
-    for (a in 1:A) {
-      for (j in 1:9) {
-        index <- ag*a + sg*6 + 7 + j
-        if (epFlag) {
-          sampleWeeklyIncidence[weekNo, 9*(a-1) + j] <- x0[index] * ep_t[a]
-        } else {
-          sampleWeeklyIncidence[weekNo, 9*(a-1) + j] <- x0[index]
-        }
-        x0[index] <- 0
-      }
-    }
-    
-    for (a in 1:A) {
-      indices <- ag*a + sg*6 + 1:4
-      no_doses[weekNo, 1:4] <- no_doses[weekNo, 1:4] + x0[indices]
-      x0[indices] <- 0
-    }
-    weekNo <- weekNo + 1
-  }
-  
-  dayNoAfterBurn <- dayNoAfterBurn + 1
-  
-  return(list(x0 = x0, 
-              sampleWeeklyIncidence = sampleWeeklyIncidence, 
-              no_doses = no_doses, 
-              dayNoAfterBurn = dayNoAfterBurn, 
-              weekNo = weekNo)) 
-}
-################ Sample ###################
-Sample <- function(vac_calendar, vac_dose, cov_c, vac_info, posteriors, run_start, run_full, run_burn, dt, A, ag, sg, ep_t) {
-  require(deSolve)
-  
-  currentODETime <- run_start
-  weekNo <- 0
-  dayNoAfterBurn <- 0
-  
-  currentParamValues <- posteriors
-  ParameterValuesforODE(currentParamValues) 
-  x0 <- generateInitialStates(cov_c)
-  
-  ODE_desc_inst <- ODE_desc(vac_calendar, vac_dose, vac_info, cov_c)
-  
-  sampleWeeklyIncidence <- matrix(nrow = 521, ncol = A * 9)
-  no_doses <- matrix(nrow = 521, ncol = 4)
-  
-  while (currentODETime < (run_full + run_burn)) {
-    
-    ode_result <- ode(y = x0, times = c(currentODETime, currentODETime + dt), func = model_rsv, parms = ODE_desc_inst)
-    x0 <- ode_result[nrow(ode_result), -1]  
-    
-    if (currentODETime > run_burn) {
-      results <- getWeeklyIncidence(x0, sampleWeeklyIncidence, no_doses, FALSE, dayNoAfterBurn, weekNo, A, ag, sg, ep_t)
-      x0 <- results$x0
-      sampleWeeklyIncidence <- results$sampleWeeklyIncidence
-      no_doses <- results$no_doses
-      dayNoAfterBurn <- results$dayNoAfterBurn
-      weekNo <- results$weekNo
-    }
-    
-    currentODETime <- currentODETime + dt
-  }
-  
-  return(list(inci = sampleWeeklyIncidence, doses = no_doses))
-}
-
-### 
-StatesValues <- function(vac_calendar, vac_dose, cov_c, vac_info, posteriors) {
-  require(deSolve)
-  
-  currentODETime <- run_start
-  inc_tot <- numeric(A) 
-  weekNo <- 0
-  dayNoAfterBurn <- 0
-  
-  currentParamValues <- posteriors 
-  ParameterValuesforODE(currentParamValues)
-  
-  collect_protect <- matrix(0, nrow = 365 * 12 + 365, ncol = 30 * 6)
-  x0 <- generateInitialStates(cov_c) 
-  x0_N <- length(x0)
-  xmat <- matrix(0, nrow = 365 * 12 + 365, ncol = x0_N)
-  
-  ODE_desc_inst <- ODE_desc(vac_calendar, vac_dose, vac_info, cov_c)
-  
-  sampleWeeklyIncidence <- matrix(0, nrow = 521, ncol = A*9)
-  no_doses <- matrix(0, nrow = 521, ncol = 4)
-  
-  while (currentODETime < (run_full + run_burn)) {
-    xmat[currentODETime + 1, ] <- x0 
-
-    run_ode <- ode(y = x0, times = c(currentODETime, currentODETime + dt), func = model_rsv, parms = ODE_desc_inst)
-    x0 <- tail(run_ode[, -1], 1) # Update state based on ODE solution
-    
-    if (currentODETime > run_burn) {
-      
-      getWeeklyIncidence(x0, sampleWeeklyIncidence, no_doses, FALSE)
-    }
-    
-    currentODETime <- currentODETime + dt
-  }
-  
-  return(xmat)
-}
-
-############### CwX Contacts for persons who are cocooned ###############
-get_cwn <- function(prop_c, s) {
-  cwn_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:12) {
-      for (j in 1:A) {
-        cwn_e[i, j] <- nwn_p(i, j)
-      }
-    }
-    
-    for (i in 1:12) {
-      for (j in 1:12) {
-        cwn_e[i, j] <- nwn_p(i, j) * (1 - prop_c)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:A) {
-        cwn_e[i, j] <- pwn_p(i, j)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        cwn_e[i, j] <- (cnt_matrix_p[i, j] - cnt_matrix_p_h[i, j]) * (1 - prop_c)
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 1:12) {
-      for (j in 1:A) {
-        cwn_e[i, j] <- nwn_c(i, j)
-      }
-    }
-    
-    for (i in 1:12) {
-      for (j in 1:12) {
-        cwn_e[i, j] <- nwn_c(i, j) * (1 - prop_c)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:A) {
-        cwn_e[i, j] <- pwn_c(i, j)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        cwn_e[i, j] <- (cnt_matrix_c[i, j] - cnt_matrix_c_h[i, j]) * (1 - prop_c)
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(cwn_e)
-}
-####
-get_cwp <- function(prop_c, s) {
-  cwp_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:12) {
-      for (j in 18:21) {
-        cwp_e[i, j] <- (cnt_matrix_p[i, j] - cnt_matrix_p_h[i, j]) * p_mat[j] * (1 - prop_c)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        cwp_e[i, j] <- pwp_p[i, j] * (1 - prop_c)
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 1:12) {
-      for (j in 18:21) {
-        cwp_e[i, j] <- (cnt_matrix_c[i, j] - cnt_matrix_c_h[i, j]) * p_mat[j] * (1 - prop_c)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        cwp_e[i, j] <- pwp_c[i, j] * (1 - prop_c)
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(cwp_e)
-}
-####
-get_cwc <- function(prop_c, s) {
-  cwc_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:12) {
-      for (j in 1:12) {
-        cwc_e[i, j] <- nwn_p(i, j) * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        cwc_e[i, j] <- cnt_matrix_p_h(i, j) + (cnt_matrix_p(i, j) - cnt_matrix_p_h(i, j)) * prop_c
-      }
-    }
-    
-    for (i in 1:12) {
-      for (j in 18:21) {
-        cwc_e[i, j] <- cnt_matrix_p_h(i, j) / 2.0 + (cnt_matrix_p(i, j) - cnt_matrix_p_h(i, j)) * p_mat[j] * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        cwc_e[i, j] <- pwp_p(i, j) * prop_c
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 1:12) {
-      for (j in 1:12) {
-        cwc_e[i, j] <- nwn_c(i, j) * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        cwc_e[i, j] <- cnt_matrix_c_h(i, j) + (cnt_matrix_c(i, j) - cnt_matrix_c_h(i, j)) * prop_c
-      }
-    }
-    
-    for (i in 1:12) {
-      for (j in 18:21) {
-        cwc_e[i, j] <- cnt_matrix_c_h(i, j) / 2.0 + (cnt_matrix_c(i, j) - cnt_matrix_c_h(i, j)) * p_mat[j] * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        cwc_e[i, j] <- pwp_c(i, j) * prop_c
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(cwc_e)
-}
-###### PwX Contacts for persons who are mothers but not cocooned  #######
-get_pwn <- function(prop_c, s) {
-  pwn_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 18:21) {
-      for (j in 1:A) {
-        pwn_e[i, j] <- pwn_p(i, j)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        pwn_e[i, j] <- cnt_matrix_p_h(i, j) + (cnt_matrix_p(i, j) - cnt_matrix_p_h(i, j)) * (1 - prop_c)
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 18:21) {
-      for (j in 1:A) {
-        pwn_e[i, j] <- pwn_c(i, j)
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 1:12) {
-        pwn_e[i, j] <- cnt_matrix_c_h(i, j) + (cnt_matrix_c(i, j) - cnt_matrix_c_h(i, j)) * (1 - prop_c)
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(pwn_e)
-}
-####
-get_pwp <- function(prop_c, s) {
-  pwp_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 18:21) {
-      for (j in 18:21) {
-        pwp_e[i, j] <- pwp_p(i, j) * (1 - prop_c)
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 18:21) {
-      for (j in 18:21) {
-        pwp_e[i, j] <- pwp_c(i, j) * (1 - prop_c)
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(pwp_e)
-}
-####
-get_pwc <- function(prop_c, s) {
-  pwc_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 18:21) {
-      for (j in 1:12) {
-        pwc_e[i, j] <- (cnt_matrix_p(i, j) - cnt_matrix_p_h(i, j)) * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        pwc_e[i, j] <- pwn_p(i, j) * prop_c
-      }
-    }
-    
-  } else if (s == 'c') {
-    for (i in 18:21) {
-      for (j in 1:12) {
-        pwc_e[i, j] <- (cnt_matrix_c(i, j) - cnt_matrix_c_h(i, j)) * prop_c
-      }
-    }
-    
-    for (i in 18:21) {
-      for (j in 18:21) {
-        pwc_e[i, j] <- pwn_c(i, j) * prop_c
-      }
-    }
-    
-  } else {
-    stop("Error cont")
-  }
-  
-  return(pwc_e)
-}
-##### NwX Contacts for persons who are neither cocooned nor mothers #####
-get_nwn <- function(prop_c, s) {
-  nwn_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:A) {
-      for (j in 1:A) {
-        nwn_e[i, j] <- nwn_p(i, j)
-      }
-      for (j in 1:12) {
-        nwn_e[i, j] <- nwn_p(i, j) * (1 - prop_c)
-      }
-    }
-  } else if (s == 'c') {
-    for (i in 1:A) {
-      for (j in 1:A) {
-        nwn_e[i, j] <- nwn_c(i, j)
-      }
-      for (j in 1:12) {
-        nwn_e[i, j] <- nwn_c(i, j) * (1 - prop_c)
-      }
-    }
-  } else {
-    stop("Error cont")
-  }
-  
-  return(nwn_e)
-}
-####
-get_nwp <- function(prop_c, s) {
-  nwp_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:12) {
-      for (j in 18:21) {
-        nwp_e[i, j] <- (cnt_matrix_p_h[i, j] / 2.0) + (cnt_matrix_p[i, j] - cnt_matrix_p_h[i, j]) * p_mat[j] * (1 - prop_c)
-      }
-    }
-    for (i in 13:25) {
-      for (j in 18:21) {
-        nwp_e[i, j] <- cnt_matrix_p[i, j] * p_mat[j] * (1 - prop_c)
-      }
-    }
-  } else if (s == 'c') {
-    for (i in 1:12) {
-      for (j in 18:21) {
-        nwp_e[i, j] <- (cnt_matrix_c_h[i, j] / 2.0) + (cnt_matrix_c[i, j] - cnt_matrix_c_h[i, j]) * p_mat[j] * (1 - prop_c)
-      }
-    }
-    for (i in 13:25) {
-      for (j in 18:21) {
-        nwp_e[i, j] <- cnt_matrix_c[i, j] * p_mat[j] * (1 - prop_c)
-      }
-    }
-  } else {
-    stop("Error cont")
-  }
-  
-  return(nwp_e)
-}
-####
-get_nwc <- function(prop_c, s) {
-  nwc_e <- matrix(0, nrow = A, ncol = A)
-  
-  if (s == 'p') {
-    for (i in 1:A) {
-      for (j in 1:12) {
-        nwc_e[i, j] <- nwn_p(i, j) * prop_c
-      }
-    }
-    for (i in 1:12) {
-      for (j in 18:21) {
-        nwc_e[i, j] <- (cnt_matrix_p[i, j] - cnt_matrix_p_h[i, j]) * p_mat[j] * prop_c
-      }
-    }
-    for (i in 13:25) {
-      for (j in 18:21) {
-        nwc_e[i, j] <- cnt_matrix_p[i, j] * p_mat[j] * prop_c
-      }
-    }
-  } else if (s == 'c') {
-    for (i in 1:A) {
-      for (j in 1:12) {
-        nwc_e[i, j] <- nwn_c(i, j) * prop_c
-      }
-    }
-    for (i in 1:12) {
-      for (j in 18:21) {
-        nwc_e[i, j] <- (cnt_matrix_c[i, j] - cnt_matrix_c_h[i, j]) * p_mat[j] * prop_c
-      }
-    }
-    for (i in 13:25) {
-      for (j in 18:21) {
-        nwc_e[i, j] <- cnt_matrix_c[i, j] * p_mat[j] * prop_c
-      }
-    }
-  } else {
-    stop("Error cont")
-  }
-  
-  return(nwc_e)
-}
-
-populationPerAgeGroup <- uk_data_sum$populationAgeGroup
-eta <- numeric()
-################ RunInterventions ###################
-RunInterventions_func <- function(dailyBirthRate, totPopulation, ageStratification) {
-  dailyBirthRate <- dailyBirthRate
-  totPopulation <- totPopulation
-  ageStratification <- ageStratification
-  
-  A <- length(ageStratification)
-  eta <- c(0) 
-  populationPerAgeGroup <- c() 
-  modelIncidencePerTime <- c() 
-  
-  for (i in 1:(A-1)) {
-    populationPerAgeGroup <- c(populationPerAgeGroup, dailyBirthRate*365*(ageStratification[i+1] - ageStratification[i]))
-    eta <- c(eta, 1.0/(365.0*(ageStratification[i+1] - ageStratification[i])))
-    modelIncidencePerTime <- c(modelIncidencePerTime, 0)
-  }
-  
-  modelIncidencePerTime <- c(modelIncidencePerTime) 
-  populationPerAgeGroup <- c(populationPerAgeGroup, totPopulation - (dailyBirthRate*365)*ageStratification[A])
-  eta <- c(eta, dailyBirthRate / (totPopulation - (dailyBirthRate*365)*ageStratification[A]))
-  
-  dt <- 1
-  currentODETime <- 0
-  dayNoAfterBurn <- 0
-  valueLogLikelihood <- 0
-  
-  rg <- 45
-  sg <- rg * 3
-  ag <- sg * 6 + 23
-  
-  return(list(
-    dailyBirthRate = dailyBirthRate,
-    totPopulation = totPopulation,
-    ageStratification = ageStratification,
-    A = A,
-    eta = eta,
-    populationPerAgeGroup = populationPerAgeGroup,
-    modelIncidencePerTime = modelIncidencePerTime,
-    dt = dt,
-    currentODETime = currentODETime,
-    dayNoAfterBurn = dayNoAfterBurn,
-    valueLogLikelihood = valueLogLikelihood,
-    rg = rg,
-    sg = sg,
-    ag = ag
-  ))
-}
-
-### foi #####
-calculate_foi <- function(t, state_initial_age, contactMatrixPhy, contactMatrixCon, qp, b1, phi, psi, delta_i, qc) {
-  # initialize for the current time point
-  lambda_matrix <- matrix(0, nrow = 5, ncol = 4)
-  contact_rate <- matrix(0, nrow = 5, ncol = 4)
-  
-  # initialize array to store N_b values
-  N_b <- numeric(5)
-  
-  # each infection level 'i' and age group 'a'
-  for (i in 1:4) {
-    for (a in 1:5) {
-      # initialize the contact matrix the current age group and infection level
-      summation <- 0
-      
-      # N_b and the contact matrix for each 'b'
-      for (b in 1:5) {
-        # Calculate N_b for current 'b'
-        N_bi <- 0
-        for (c in 0:3) {
-          S_name <- paste0("S", c, b)
-          matching_elements <- state_initial_age[grepl(S_name, names(state_initial_age))]
-          if (length(matching_elements) > 0) {
-            N_bi <- N_bi + sum(matching_elements)
-          }
-        }
-        N_b[b] <- N_bi  # store the computed N_b
-        
-        # retrieve the A and I values for current infection level 'i' and age group 'b'
-        A_bi <- state_initial_age[paste0("A", i-1, b)]
-        I_bi <- state_initial_age[paste0("I", i-1, b)]
-        
-        # Add the contribution of age group 'b' to the summation
-        if (N_b[b] > 0) {  # avoid division by zero
-          contacts <- ((contactMatrixPhy[a, b]) + (contactMatrixCon[a, b] * qc)) * (A_bi + I_bi) / N_b[b]
-          summation <- summation + contacts
-        }
-      }
-      
-      contact_rate[a, i] <- summation
-      
-      # product of delta terms up to the infection level 'i'
-      delta_product <- prod(delta_i[1:i])
-      
-      t1 = t %% 365
-      # Calculate the time-varying factor
-      beta_value = (1 + b1*(1 + exp(-((t1/365.0 - phi))*((t1/365.0 - phi))/(2*psi*psi))))
-      
-      # Calculate lambda for the current age group 'a' and infection level 'i'
-      lambda_matrix[a, i] <- qp * beta_value * delta_product * summation
-    }
-  }
-  
-  return(lambda_matrix)
 }
 
 calculate_gamma <- function(params) {
@@ -739,15 +161,16 @@ calculate_gamma <- function(params) {
   params[['gamma2']] <<- 1/(g0*g1*g2)
   
 }
-plot_figures <- function(ode_output, programme_name){
-  if (!requireNamespace("tidyverse", quietly = TRUE)) {
-    install.packages("tidyverse")
-    library(tidyverse)
+
+plot_figures <- function(ode_output, programme_name, subtitle){
+  
+  if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")
   }
-  if (!requireNamespace("patchwork", quietly = TRUE)) {
-    install.packages("patchwork")
-    library(patchwork)
-  }
+  
+  library(pacman)
+  
+  pacman::p_load(tidyverse, patchwork)
   
   ode_output <- as.data.frame(ode_output)
   programme_name <- as.character(programme_name)
@@ -759,19 +182,22 @@ plot_figures <- function(ode_output, programme_name){
   
   p_maternal <- ggplot(p_maternal, aes(x = time, y = value, color = state)) +
     geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Maternal",
          x = "Time",
          y = "Population") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
-                       labels = c("1yr", "2", "3", "4", "5") ) +
+    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+                       labels = c("0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"), 
           plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
           legend.position = "none") 
   # level 0
   p_level0 <- ode_output %>% 
@@ -783,6 +209,7 @@ plot_figures <- function(ode_output, programme_name){
   
   p_level0 <- ggplot(p_level0, aes(x = time, y = value, color = state)) +
     geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 0",
          x ="",
          y = "Population",
@@ -790,13 +217,15 @@ plot_figures <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
-                       labels = c("1yr", "2", "3", "4", "5") ) +
+    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+                       labels = c("0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
           plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
           legend.position = "none") 
   
   # level 1
@@ -809,6 +238,7 @@ plot_figures <- function(ode_output, programme_name){
   
   p_level1 <- ggplot(p_level1, aes(x = time, y = value, color = state)) +
     geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 1",
          x = "",
          y = "",
@@ -816,13 +246,15 @@ plot_figures <- function(ode_output, programme_name){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
-                       labels = c("1yr", "2", "3", "4", "5") ) +
+    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+                       labels = c("0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
           plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
           legend.position = "none") 
   
   # level 2
@@ -835,19 +267,23 @@ plot_figures <- function(ode_output, programme_name){
   
   p_level2 <- ggplot(p_level2, aes(x = time, y = value, color = state)) +
     geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 2",
-         x = "time",
+         x = "Time (years)",
          y = "Population",
          tag = "C") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
-                       labels = c("1yr", "2", "3", "4", "5") ) +
+    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+                       labels = c("0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
           plot.tag=element_text(face="bold"),
           legend.position = "none") 
   
@@ -861,20 +297,23 @@ plot_figures <- function(ode_output, programme_name){
   
   p_level3 <- ggplot(p_level3, aes(x = time, y = value, color = state)) +
     geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 3",
-         x = "time",
+         x = "",
          y = "",
          tag = "D") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(0,1825), breaks = c(365,730,1095,1460, 1825),
-                       labels = c("1yr", "2", "3", "4", "5") ) +
+    scale_x_continuous(limits = c(0,3650), breaks = seq(0,3650,365),
+                       labels = c("0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10") ) +
     theme(axis.text.x=element_text(family="sans",size=7, color = "black"),
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
           plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
           legend.position = "none" ) 
   
   # joint 
@@ -882,15 +321,331 @@ plot_figures <- function(ode_output, programme_name){
   
   plot_base <- plot_base + plot_annotation(
     title = programme_name,
-    subtitle = "Five year movement of individuals between disease states and across age groups",
+    subtitle = subtitle,
     theme = theme(
       plot.title = element_text(family="sans",size=15, color = "black"),
-      plot.subtitle = element_text(family="sans",size=12, color = "black")+
+      plot.subtitle = element_text(family="sans",size=13, color = "black")+
         theme_classic()
     )
   )
   
   return(plot_base)
+}
+
+plot_incidence <- function(ode_output, programme_name, subtitle){
+  
+  if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")
+  }
+  
+  library(pacman)
+  
+  pacman::p_load(tidyverse, patchwork)
+
+  ode_output <- as.data.frame(ode_output)
+  programme_name <- as.character(programme_name)
+  # level 0
+  results_base_stable <- as.data.frame(ode_output[2190:3650,])
+  results_base_0 <- results_base_stable
+  annual_incidence_0 <- results_base_0  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E01", "E02", "E03"))%>%
+    mutate(state = factor(state, levels = c("E01", "E02", "E03")))
+  
+  annual_incidence_0 <- ggplot(annual_incidence_0, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 9900), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 620), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 3.31), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 7380), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 446), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 2.38), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dashed") +
+    labs(title = "Exposure level 0",
+         x = "",
+         y = "Population",
+         tag = "A") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.y = element_text(size = 13, colour = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 9, face = "bold"),
+          legend.position = "none" ) 
+  annual_incidence_0
+  
+  # level 1
+  results_base_1 <- as.data.frame(results_base_stable)
+  annual_incidence_1 <- results_base_1  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E11", "E12", "E13"))%>%
+    mutate(state = factor(state, levels = c("E11", "E12", "E13")))
+  
+  annual_incidence_1 <- ggplot(annual_incidence_1, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 8040), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 2880), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 48.8), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 5500), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1920), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 32), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dashed") +
+    labs(title = "Exposure level 1",
+         x = "",
+         y = "",
+         tag = "B") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 9, face = "bold"),
+          legend.position = "none" ) 
+  
+  annual_incidence_1
+  # level 2
+  results_base_2 <- as.data.frame(results_base_stable)
+  annual_incidence_2 <- results_base_2  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E21", "E22", "E23"))%>%
+    mutate(state = factor(state, levels = c("E21", "E22", "E23")))
+  
+  annual_incidence_2 <- ggplot(annual_incidence_2, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 7290), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 5500), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 146.5), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 3820), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 2760), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 72), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dashed") +
+    labs(title = "Exposure level 2",
+         x = "Time (years)",
+         y = "Population",
+         tag = "C") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1, size = 13, color = "black"),
+          axis.title.y = element_text(size = 13, colour = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 9, face = "bold"),
+          legend.position = "none" ) 
+  
+  annual_incidence_2
+  
+  # level 3
+  results_base_3 <- as.data.frame(results_base_stable)
+  annual_incidence_3 <- results_base_3  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E31", "E32", "E33"))%>%
+    mutate(state = factor(state, levels = c("E31", "E32", "E33")))
+  
+  annual_incidence_3 <- ggplot(annual_incidence_3, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E31"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E32"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E33"), color = "black", linetype = "dotdash") +
+    labs(title = "Exposure level 3",
+         x = "",
+         y = "",
+         tag = "D") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2190,3650), breaks = seq(2190,3650, 365),
+                       labels = c("6","7", "8", "9", "10") ) +
+    theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
+          axis.text.y=element_text(family="sans",size=12, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 9, face = "bold"),
+          legend.position = "none" ) 
+  
+  annual_incidence_3
+  
+  annual_incidence <- (annual_incidence_0 | annual_incidence_1)/ (annual_incidence_2 | annual_incidence_3)
+  
+  
+  annual_incidence <- annual_incidence + plot_annotation(
+    title = programme_name,
+    subtitle = subtitle,
+    theme = theme(
+      plot.title = element_text(family="sans",size=16, color = "black", face = "bold"),
+      plot.subtitle = element_text(family="sans",size=14, color = "black")+
+        theme_classic()
+    )
+  )
+  
+  return(annual_incidence)
+}
+
+plot_incidence_annual <- function(ode_output, programme_name, subtitle){
+  
+  if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")
+  }
+  
+  library(pacman)
+  
+  pacman::p_load(tidyverse, patchwork)
+  
+  ode_output <- as.data.frame(ode_output)
+  programme_name <- as.character(programme_name)
+  # level 0
+  results_stable <- as.data.frame(ode_output[2920:3285,])
+  results_stable_0 <- results_stable
+  compare_incidence_0 <- results_stable_0  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E01", "E02", "E03"))%>%
+    mutate(state = factor(state, levels = c("E01", "E02", "E03")))
+  
+  compare_incidence_0 <- ggplot(compare_incidence_0, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 0",
+         x = "",
+         y = "Population",
+         tag = "A") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
+                       labels = c("0","3", "6", "9", "12") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
+          legend.position = "none" ) 
+  compare_incidence_0
+  
+  # level 1
+  results_stable_1 <- as.data.frame(results_stable)
+  compare_incidence_1 <- results_stable_1  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E11", "E12", "E13"))%>%
+    mutate(state = factor(state, levels = c("E11", "E12", "E13")))
+  
+  compare_incidence_1 <- ggplot(compare_incidence_1, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 1",
+         x = "",
+         y = "",
+         tag = "B") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
+                       labels = c("0","3", "6", "9", "12") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
+          legend.position = "none" ) 
+  
+  compare_incidence_1
+  # level 2
+  results_stable_2 <- as.data.frame(results_stable)
+  compare_incidence_2 <- results_stable_2  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E21", "E22", "E23"))%>%
+    mutate(state = factor(state, levels = c("E21", "E22", "E23")))
+  
+  compare_incidence_2 <- ggplot(compare_incidence_2, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    labs(title = "Exposure level 2",
+         x = "Time (months)",
+         y = "Population",
+         tag = "C") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
+                       labels = c("0","3", "6", "9", "12") ) +
+    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
+          legend.position = "none" ) 
+  
+  compare_incidence_2
+  
+  # level 3
+  results_stable_3 <- as.data.frame(results_stable)
+  compare_incidence_3 <- results_stable_3  %>% 
+    gather(key = "state", value = "value", -time) %>% 
+    filter(state %in% c("E31", "E32", "E33"))%>%
+    mutate(state = factor(state, levels = c("E31", "E32", "E33")))
+  
+  compare_incidence_3 <- ggplot(compare_incidence_3, aes(x = time, y = value, color = state)) +
+    geom_line() +
+    scale_y_continuous(limits = c(0, 1)) + 
+    labs(title = "Exposure level 3",
+         x = "",
+         y = "",
+         tag = "D") +
+    theme_minimal() +
+    facet_wrap(~state, scales = "free_y") +
+    theme_classic() +
+    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
+                       labels = c("0","3", "6", "9", "12") ) +
+    theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
+          axis.text.y=element_text(family="sans",size=12, color = "black"),
+          legend.text=element_text(family="sans",size=13, color = "black"),
+          legend.title=element_text(family="sans",size=13, color = "black"),
+          plot.tag=element_text(face="bold"),
+          panel.spacing = unit(0.5, "lines"), 
+          strip.text.x = element_text(size = 8),
+          legend.position = "none" ) 
+  
+  compare_incidence_3
+  
+  compare_incidence <- (compare_incidence_0 | compare_incidence_1)/ (compare_incidence_2 | compare_incidence_3)
+  
+  
+  compare_incidence <- compare_incidence + plot_annotation(
+    title = programme_name,
+    subtitle = subtitle,
+    theme = theme(
+      plot.title = element_text(family="sans",size=16, color = "black", face = "bold"),
+      plot.subtitle = element_text(family="sans",size=14, color = "black")+
+        theme_classic()
+    )
+  )
+  
+  return(compare_incidence)
 }
 
 new_cases <- function(ode_output){

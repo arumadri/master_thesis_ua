@@ -4,24 +4,26 @@ annual_incidence(results_base)
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
   Incidence = c(1531380.51, 494402.44, 10430.79),  # Actual incidence numbers
-  Population = 52771252  # Population at risk for each age group
+  Population = 52771252 # Population at risk for each age group
 )
 
 # Calculate incidence per 100,000 population at risk
 incidence_model <- incidence_model %>%
   mutate(
-    Incidence_per_100k = (Incidence / Population) * 100000  # Adjusting calculation to be per 100k of at-risk population
-  )
+    Incidence_per_100k = (Incidence / Population) * 100000,  # Adjusting calculation to be per 100k of at-risk population
+    Age_Group = factor(Age_Group, levels = c("65+yr", "5-64yr", "0-4yr"))
+    )
 
 # plot
 library(ggplot2)
 
 expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_per_100k, fill = Age_Group)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
-  scale_fill_manual(values = c("0-4yr" = "red", "5-64yr" = "green", "65+yr" = "blue"), 
+  scale_fill_manual(values = c("0-4yr" = "#f98f88", "5-64yr" = "#21c352", "65+yr" = "#629dff"), 
                     name = "",  
-                    labels = c("0-4yr", "5-64yr", "65+yr")) +
-  labs(title = "Burden by Age Group",
+                    labels = c("0-4yr", "5-64yr", "65+yr"),
+                    breaks = c("0-4yr", "5-64yr", "65+yr")) +
+  labs(title = "Annual Burden by Age Group",
        x = "",
        y = "Annual incidence of RSV infection per 100,000",
        tag = "E") +
@@ -44,13 +46,14 @@ expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_p
   ) + coord_flip()
 
 # plot incidence over time horizon (year 7)
-incidence_base <- plot_incidence(results_base, "Burden by Age Group")
+incidence_base <- plot_incidence_annual(results_base, "", 
+                                 "")
 
 # combine plots and save 
 estimated_inicidence <- (incidence_base / expected_incidence)
 
 fig1 <- estimated_inicidence + plot_annotation(
-  title = "Estimated annual burden of RSV",
+  title = "Estimated Annual Burden of RSV",
   subtitle = "",
   theme = theme(
     plot.title = element_text(family="sans",size=18, color = "black", face = "bold"),
@@ -59,5 +62,3 @@ fig1 <- estimated_inicidence + plot_annotation(
   ))
 ggsave("fig1.pdf", plot = fig1, width = 15, height = 12, dpi = 600, path = "figs/")
 ### 
-
- 

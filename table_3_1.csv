@@ -1,0 +1,13 @@
+"","Intervention","Symptomatic.GP.","Hosp.admission.","Death","Life.years.gained","Incr.cost.GP","Incr.cost.hosp","Age.group","No.of.cases","Prop.hosp","Prop.death","Prop.GP"
+"1","Palivizumab",121,55,1,85,362075963,362038350,"0-4 years",16041,9.86,8.33,8.66
+"2","Niservimab",975,368,8,585,50863410,50443903,"0-4 years",106052,65.95,66.67,69.74
+"3","Maternal vaccine",295,135,3,255,17228266,17074196,"0-4 years",38961,24.19,25,21.1
+"4","Elderly vaccine",7,0,0,0,306805,307021,"0-4 years",526,0,0,0.5
+"5","Palivizumab",0,0,0,0,362075963,362038350,"5-64 years",0,0,0,0
+"6","Niservimab",0,0,0,0,50863410,50443903,"5-64 years",0,0,0,0
+"7","Maternal vaccine",0,0,0,0,17228266,17074196,"5-64 years",0,0,0,0
+"8","Elderly vaccine",0,0,0,0,306805,307021,"5-64 years",0,0,0,0
+"9","Palivizumab",0,0,0,0,362075963,362038350,"65+",0,0,0,0
+"10","Niservimab",0,0,0,0,50863410,50443903,"65+",0,0,0,0
+"11","Maternal vaccine",0,0,0,0,17228266,17074196,"65+",0,0,0,0
+"12","Elderly vaccine",0,0,0,0,306805,307021,"65+",0,0,0,0
