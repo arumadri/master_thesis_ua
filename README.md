@@ -22,7 +22,7 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 ### /figs folder 
 + contains main and supplementary plots used in this study.
 
-### /parameter sources folder
+### /parameter_sources folder
 + contains publication sources for costs, model and intervention parameters
 
 ### /functions folder 
