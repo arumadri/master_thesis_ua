@@ -1,9 +1,12 @@
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(viridisLite)
-library(viridis)
-library(patchwork)
+# packages
+
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+library(pacman)
+
+pacman::p_load(tidyverse, viridisLite, viridis, patchwork)
 
 # save current table 3 as table 3_1 to avoid losing data
 ### save so it doesnt get overridden by table_3
@@ -11,17 +14,17 @@ write.csv(table_3, file = "table_3_1.csv")
 
 # prepare 
 long_data_3 <- table_3 %>%
-  select(Intervention, Prop.GP, Prop.hosp, Prop.death) %>%
+  select(Intervention, No.GP, No.hosp, No.death) %>%
   gather(key = "Metric", value = "Value", -Intervention)
 
 # plot proportions
 condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Metric)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-  scale_fill_manual(values = c("Prop.GP" = "#fde724", 
-                               "Prop.hosp" = "#440154", 
-                               "Prop.death" = "#20908c"),
-                    labels = c("Prop.GP" = "GP visit", "Prop.hosp" = "Hospitalization", "Prop.death" = "Death")) +
-  labs(title = "Proportion of health outcomes averted per intervention",
+  scale_fill_manual(values = c("No.GP" = "#fde724", 
+                               "No.hosp" = "#440154", 
+                               "No.death" = "#20908c"),
+                    labels = c("No.GP" = "GP visit", "No.hosp" = "Hospitalization", "No.death" = "Death")) +
+  labs(title = "Number of health outcomes averted per intervention",
        x = "", y = "Percentage (%)", tag = "B") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
@@ -136,19 +139,3 @@ fig_3 <- figure_3 + plot_annotation(
 fig_3
 
 ggsave("fig3.pdf", plot = fig_3, width = 15, height = 12, dpi = 600, path = "figs/")
-
-# No intervention vs intervention
-
-baseline_incidence <- plot_incidence(results_base, "Baseline: No intervention", "Black dotted lines mark lower limit of baseline incidence")
-palivizimab_incidence <- plot_incidence(results_pmab, "Palivizumab", "Black dotted lines mark lower limit of baseline incidence") 
-niservimab_incidence <- plot_incidence(results_nmab, "Niservimab", "Black dotted lines mark lower limit of baseline incidence") 
-maternal_incidence <- plot_incidence(results_mat, "Maternal vaccination", "Black dotted lines mark lower limit of baseline incidence") 
-elderly_incidence <- plot_incidence(results_old, "Elderly vaccination", "Black dotted lines mark lower limit of baseline incidence") 
-
-# save in supplementary material 
-ggsave("baseline_incidence.pdf", plot = baseline_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-ggsave("palivizumab_incidence.pdf", plot = palivizimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-ggsave("niservimab_incidence.pdf", plot = niservimab_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-ggsave("maternal_incidence.pdf", plot = maternal_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 12, dpi = 600, path = "figs/supplementary/")
-

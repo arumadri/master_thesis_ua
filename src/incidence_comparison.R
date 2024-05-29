@@ -1,9 +1,18 @@
+# packages 
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+library(pacman)
+
+pacman::p_load(tidyverse, patchwork)
+
 # extract incidence for 1 year from results_base
 annual_incidence(results_base)
 # prepare data from results_base
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
-  Incidence = c(1531380.51, 494402.44, 10430.79),  # Actual incidence numbers
+  Incidence = c(1531380.51, 494402.44, 10430.79),  # incidence 
   Population = 52771252 # Population at risk for each age group
 )
 
@@ -15,8 +24,6 @@ incidence_model <- incidence_model %>%
     )
 
 # plot
-library(ggplot2)
-
 expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_per_100k, fill = Age_Group)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
   scale_fill_manual(values = c("0-4yr" = "#f98f88", "5-64yr" = "#21c352", "65+yr" = "#629dff"), 
@@ -46,8 +53,7 @@ expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_p
   ) + coord_flip()
 
 # plot incidence over time horizon (year 7)
-incidence_base <- plot_incidence_annual(results_base, "", 
-                                 "")
+incidence_base <- plot_incidence_annual(results_base, "", "")
 
 # combine plots and save 
 estimated_inicidence <- (incidence_base / expected_incidence)

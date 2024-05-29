@@ -362,7 +362,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
     geom_hline(aes(yintercept = 446), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dashed") +
     geom_hline(aes(yintercept = 2.38), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 0",
-         x = "",
+         x = "Time (years)",
          y = "Population",
          tag = "A") +
     theme_minimal() +
@@ -374,6 +374,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1, size = 13, color = "black"),
           axis.title.y = element_text(size = 13, colour = "black"),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
@@ -398,7 +399,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
     geom_hline(aes(yintercept = 1920), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dashed") +
     geom_hline(aes(yintercept = 32), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 1",
-         x = "",
+         x = "Time (years)",
          y = "",
          tag = "B") +
     theme_minimal() +
@@ -410,6 +411,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1, size = 13, color = "black"),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 9, face = "bold"),
@@ -468,7 +470,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
     geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E32"), color = "black", linetype = "dotdash") +
     geom_hline(aes(yintercept = 1), data = subset(annual_incidence_3, state == "E33"), color = "black", linetype = "dotdash") +
     labs(title = "Exposure level 3",
-         x = "",
+         x = "Time (years)",
          y = "",
          tag = "D") +
     theme_minimal() +
@@ -480,6 +482,7 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=12, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1, size = 13, color = "black"),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 9, face = "bold"),
@@ -516,7 +519,7 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
   ode_output <- as.data.frame(ode_output)
   programme_name <- as.character(programme_name)
   # level 0
-  results_stable <- as.data.frame(ode_output[2920:3285,])
+  results_stable <- as.data.frame(ode_output[2565:2940,])
   results_stable_0 <- results_stable
   compare_incidence_0 <- results_stable_0  %>% 
     gather(key = "state", value = "value", -time) %>% 
@@ -526,18 +529,19 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
   compare_incidence_0 <- ggplot(compare_incidence_0, aes(x = time, y = value, color = state)) +
     geom_line() +
     labs(title = "Exposure level 0",
-         x = "",
+         x = "Time (months)",
          y = "Population",
          tag = "A") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
+                       labels = c("1","4", "7", "10", "")  ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
@@ -554,18 +558,19 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
   compare_incidence_1 <- ggplot(compare_incidence_1, aes(x = time, y = value, color = state)) +
     geom_line() +
     labs(title = "Exposure level 1",
-         x = "",
+         x = "Time (months)",
          y = "",
          tag = "B") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
+                       labels = c("1","4", "7", "10", "")  ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
@@ -588,8 +593,8 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
+                       labels = c("1","4", "7", "10", "")  ) +
     theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
@@ -613,18 +618,19 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     geom_line() +
     scale_y_continuous(limits = c(0, 1)) + 
     labs(title = "Exposure level 3",
-         x = "",
+         x = "Time (months)",
          y = "",
          tag = "D") +
     theme_minimal() +
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
-    scale_x_continuous(limits = c(2920,3285), breaks = seq(2920,3285,90),
-                       labels = c("0","3", "6", "9", "12") ) +
+    scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
+                       labels = c("1","4", "7", "10", "") ) +
     theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
           axis.text.y=element_text(family="sans",size=12, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
@@ -649,10 +655,10 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
 }
 
 new_cases <- function(ode_output){
-  start_simulation <- (6*365 + 1)
-  end_simulation <- 3650
+  start_scenario <- (6*365 + 1) 
+  end_scenario <- 3650 
   
-  relevant_data <- ode_output[start_simulation:end_simulation, ]
+  relevant_data <- ode_output[start_scenario:end_scenario, ]
   
   daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
   daily_changes_df <- as.data.frame(daily_changes)
@@ -663,10 +669,10 @@ new_cases <- function(ode_output){
 }
 
 annual_incidence <- function(ode_output){
-  start_simulation <- (8*365 + 1)
-  end_simulation <- 3285
+  start_incidence <- (8*365 + 1) # using 8th year after model stabilization and scenario analysis to estimate annual incidence
+  end_incidence <- 3285 # one year 
   
-  relevant_data <- ode_output[start_simulation:end_simulation, ]
+  relevant_data <- ode_output[start_incidence:end_incidence, ]
   
   daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
   daily_changes_df <- as.data.frame(daily_changes)

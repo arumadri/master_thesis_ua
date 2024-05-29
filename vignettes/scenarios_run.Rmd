@@ -1,0 +1,23 @@
+# Vignette for running analysis using the RSV model and plotting figures and generating plots 
+
+## 1. Generate initial states
+
+```{r}
+
+# load data from Hodgson et al 2020
+load(here::here("data/uk_data_sum.RData"))
+load(here::here("data/posteriors.Rda"))
+
+# load necessary functions 
+source("functions/RunInterventions.R")
+```
+
+Follow instructions in `generate_initial_states.R` in /src folder to complete this step
+
+## 2. Load model and parameters
+
+```{r}
+# load model 
+source("functions/run_model_merged.R")
+
+```

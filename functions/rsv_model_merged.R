@@ -1,4 +1,4 @@
-rm(list = ls())
+# package
 
 if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
@@ -46,7 +46,7 @@ calculate_gamma(params = params)
 
 ############################ initial states per age group ##################### 
 # Define the age ranges
-ranges <- list(c(1, 16), c(17, 23), c(24, 25))
+ranges <- list(c(1, 16), c(17, 23), c(24, 25)) # 0-4, 5-64, 65+ years
 
 # function to sum across ranges
 sum_ranges <- function(data, ranges) {
@@ -64,12 +64,7 @@ sum_ranges <- function(data, ranges) {
 
 # merged initial states 
 state_age_merged <- sum_ranges(state_initial, ranges)
-
-# check for consistency
-sum(initial_states)              # matrix original 25 age groups = 55744600
-sum(unlist(state_initial))   # list original 25 age groups = 55744600
-sum(unlist(state_age_merged))    # list merged to 3 groups     = 55744600
-sum(round(unlist(state_age_merged), digits = 0))  # rounded sum = 55744594 
+round(unlist(state_age_merged), digits = 0)  
 
 # manually input states_initial_age from 'state_age_merged' above
 state_initial_age <- c(M=c(244302,0,0),    S0=c(318282,34100,0),  E0=c(200915,21526,0),   A0=c(23465,9013,0),  I0=c(137742,8259,0), R0=c(360445,38618,0), V0=c(0,0,0),
@@ -232,13 +227,13 @@ rsv_model_age <- function(t, state_initial_age, params){
   t1 = t %% 365
   
   year_length = 365
-  vac_day = 274  # start of RSV season in UK, assumption is that eligible individuals are vaccinated by this date  
-  start_year = 6  
-  end_year = 10   
+  vac_day = 300  # assumption is that eligible individuals are vaccinated by this date  
+  start_year = 6 
+  end_year = 10  
   
   # start and end day for vaccination
   start_vaccination_day = vac_day + (start_year * year_length)
-  end_vaccination_day = vac_day + (end_year - 1) * year_length
+  end_vaccination_day = vac_day + ((end_year - 1) * year_length)
   
   if (t >= start_vaccination_day && t <= end_vaccination_day && abs(t1 - vac_day) <= 1) {
 

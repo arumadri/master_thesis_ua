@@ -1,8 +1,12 @@
-library(knitr)
-library(kableExtra)
-library(grid)
-library(gridExtra)
-library(patchwork)
+# packages
+
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+library(pacman)
+
+pacman::p_load(knitr, kableExtra, grid, gridExtra, patchwork)
 
 # table 1
 table_1 <- data.frame(
@@ -51,13 +55,17 @@ table_2 <- data.frame(
   Parameter = c("<b>Costs per outcome</b>", "GP consultation", "Hospital admission episode", "Hospital admission episode ",
                 "<b>Life years gained</b>", "0-4 years", 
                 "<b>Probability of clinical outcomes</b>", "Per-infection probability of GP consultation","Per-infection probability of GP consultation" ,"Per-infection probability of death", "Per-infection probability of death",
-                "Per-infection probability of hospital admissions","Per-infection probability of hospital admissions","Per-infection probability of hospital admissions"),
+                "Per-infection probability of hospital admissions","Per-infection probability of hospital admissions","Per-infection probability of hospital admissions", "<b>QALY loss per outcome </b>", "GP consulation", "GP consulation",
+                "Hospital admission", "Hospital admission"),
   Value = c(" ", "£36.00 (all ages)", " <5 years: £1100.23", " ≥15 years: £652.29 ", " ", "85", " ", "<5 years: 0.006 ", "≥5 years: 0.016",
-            "<5 years: 8.197 x 10^-6", "≥5 years: 5.697 x 10^-6","<5 years: 0.004", "5-64 years: 4.688 x 10^-5","65+ years: 6.197 x 10^-5"),
+            "<5 years: 8.197 x 10^-6", "≥5 years: 5.697 x 10^-6","<5 years: 0.004", "5-64 years: 4.688 x 10^-5","65+ years: 6.197 x 10^-5", 
+            "", "<5 years: 2.336 × 10^-3", "≥5 years: 1.448 × 10^-3","<5 years: 4.098 × 10^-3", "≥5 years: 2.990 × 10^-3"),
   Reference = c(" ", "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>", "<a href= 'https://www.thelancet.com/journals/lanepe/article/PIIS2666-7762(23)00248-X/fulltext'>25</a> ", 
                 "<a href= 'https://www.thelancet.com/journals/lanepe/article/PIIS2666-7762(23)00248-X/fulltext'>25</a>","", "<a href= 'https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthandlifeexpectancies/articles/lifeexpectancycalculator/2019-06-07'>24</a> ",
                 "", "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
+                "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
+                "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>", "",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>")
 )
@@ -67,9 +75,9 @@ table_2$Value <- gsub("<", "&lt;", table_2$Value, fixed = TRUE)
 table_2 <- kable(table_2, "html", booktabs = TRUE,escape = FALSE, na.action = "insert") %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(14, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(c(2,4,6,8,10,12,14), color = "black", background = "#fde4e2") %>% 
-  row_spec(c(1,3,5,7,9,11,13), color = "black", background = "white") %>% 
+  row_spec(19, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
+  row_spec(c(2,4,6,8,10,12,14,16,18), color = "black", background = "#fde4e2") %>% 
+  row_spec(c(1,3,5,7,9,11,13,15,17,19), color = "black", background = "white") %>% 
   column_spec(1, width = "33%", border_left = TRUE) %>%  
   column_spec(2, width = "33%", ) %>%  
   column_spec(3, width = "33%", border_right = TRUE) %>%
@@ -81,7 +89,7 @@ table_2
 
 # table 3
 table_2_1 <- data.frame(
-  x = c("T", "T","<b><i>Palivizumab</i></b>", "ω<sub>pal</sub>","e<sub>pal</sub>","uptake<sub>pal</sub>", "admin<sub>pal</sub>", "cost<sub>pal</sub>","<b><i>Nirservimab</i></b>","ω<sub>lmab</sub>","e<sub>lmab</sub>","uptake<sub>lmab</sub>", "admin<sub>lmab</sub>", "cost<sub>lmab</sub>", 
+  x = c("T<sub>cea</sub>", "T<sub>mort</sub>","<b><i>Palivizumab</i></b>", "ω<sub>pal</sub>","e<sub>pal</sub>","uptake<sub>pal</sub>", "admin<sub>pal</sub>", "cost<sub>pal</sub>","<b><i>Nirservimab</i></b>","ω<sub>lmab</sub>","e<sub>lmab</sub>","uptake<sub>lmab</sub>", "admin<sub>lmab</sub>", "cost<sub>lmab</sub>", 
      "<b><i>Abrysvo/maternal vaccine</i></b>", "ω<sub>mat</sub>","e<sub>mat</sub>","uptake<sub>mat</sub>", "admin<sub>mat</sub>", "cost<sub>mat</sub>","<b><i>Abrysvo/elderly vaccine</i></b>",
      "ω<sub>65+</sub>","e<sub>mat</sub>","uptake<sub>65+</sub>", "admin<sub>65+</sub>", "cost<sub>65+</sub>"),
   Parameter = c("Time horizon (years) [CEA]", "Time Horizon (years) [Mortality]","", "Average period of protection (days)", "Efficacy against all infections (%)", "Coverage (%)", "Administration cost (per course)","Purchasing price (per course)","", 
@@ -167,17 +175,4 @@ table_1_sup <- kable(table_1_sup, "html", booktabs = TRUE,escape = FALSE, na.act
            title_format = "bold") 
 
 table_1_sup
-
-## averted symptomatic/GP probability per-infection 
-# <5 years: 0.006
-# ≥5 years: 0.016
-
-## averted hospitalization probability per-infection 
-# <5 years: 0.004
-# 5-64 years: 4.688 x 10^-5
-# 65+ years: 6.197 x 10^-5
-
-## averted death probability per-infection 
-# <5 years: 8.197 x 10^-6
-# ≥5 years: 5.697 x 10^-6
 
