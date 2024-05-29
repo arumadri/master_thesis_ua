@@ -39,7 +39,7 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 + `tables.R`, a walkthrough of generating all tables in the study.
 
 ### /vingettes folder
-+ `scenarios_run.Rmd`, instructions to reproduce analysis, figures and tables
++ `scenarios_run.Rmd`, markdown file with instructions to reproduce analysis, figures and tables
 
 ## Contact details 
 Please email [varumadri@gmail.com](mailto:varumadri@gmail.com) with any queries relating to this code.
