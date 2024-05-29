@@ -20,14 +20,14 @@ Clone the repository and look through the RMarkdown files in the /vingettes fold
 + `states.csv`, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
 
 ### /figs folder 
-+ contains main and supplementary plots used in this study.
++ contains main and supplementary plots output of this study.
 
 ### /parameter_sources folder
-+ contains publication sources for costs, model and intervention parameters
++ contains source publication for costs, model and intervention parameters.
 
 ### /functions folder 
 + `RunInterventions.R`, contains all the funtions used for the analysis, generating tables and figures.
-+ `rsv_model_merged.R`, is the age-startified RSV model used in the analysis.
++ `rsv_model_merged.R`, is the age-stratified RSV model used in the analysis.
 
 ### /src folder 
 + `aging_check.R`, a walkthrough to assess the implementation of the aging process in the model.
