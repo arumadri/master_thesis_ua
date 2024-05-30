@@ -211,7 +211,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 0",
-         x ="",
+         x ="Time (years)",
          y = "Population",
          tag = "A") +
     theme_minimal() +
@@ -223,6 +223,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
@@ -240,7 +241,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 1",
-         x = "",
+         x = "Time (years)",
          y = "",
          tag = "B") +
     theme_minimal() +
@@ -252,6 +253,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
@@ -299,7 +301,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     labs(title = "Exposure level 3",
-         x = "",
+         x = "Time (years)",
          y = "",
          tag = "D") +
     theme_minimal() +
@@ -311,6 +313,7 @@ plot_figures <- function(ode_output, programme_name, subtitle){
           axis.text.y=element_text(family="sans",size=7, color = "black"),
           legend.text=element_text(family="sans",size=8, color = "black"),
           legend.title=element_text(family="sans",size=8, color = "black"),
+          axis.title.x = element_text(hjust = 1, vjust = 1),
           plot.tag=element_text(face="bold"),
           panel.spacing = unit(0.5, "lines"), 
           strip.text.x = element_text(size = 8),
