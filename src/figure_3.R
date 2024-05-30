@@ -14,7 +14,7 @@ table_3_1 <- data.frame(
   'Symptomatic/GP ' = c(40,325,64,2),
   'Hosp admission ' = c(18,122,43,0), 
   'Death' = c(0,2,1,0),
-  'Life years gained' = c(0,130,65,0),
+  'Life years gained' = c(0,170,85,0),
   'Incr cost GP' = c(121585218, 17079909,100772955, 103668),
   'Incr cost hosp'= c(121566854,16959581,100729049,103740),
   'Age group' = c('0-4 years','5-64 years','65+', "0"),
