@@ -55,17 +55,13 @@ table_2 <- data.frame(
   Parameter = c("<b>Costs per outcome</b>", "GP consultation", "Hospital admission episode", "Hospital admission episode ",
                 "<b>Life years gained</b>", "0-4 years", 
                 "<b>Probability of clinical outcomes</b>", "Per-infection probability of GP consultation","Per-infection probability of GP consultation" ,"Per-infection probability of death", "Per-infection probability of death",
-                "Per-infection probability of hospital admissions","Per-infection probability of hospital admissions","Per-infection probability of hospital admissions", "<b>QALY loss per outcome </b>", "GP consulation", "GP consulation",
-                "Hospital admission", "Hospital admission"),
+                "Per-infection probability of hospital admissions","Per-infection probability of hospital admissions","Per-infection probability of hospital admissions"),
   Value = c(" ", "£36.00 (all ages)", " <5 years: £1100.23", " ≥15 years: £652.29 ", " ", "85", " ", "<5 years: 0.006 ", "≥5 years: 0.016",
-            "<5 years: 8.197 x 10^-6", "≥5 years: 5.697 x 10^-6","<5 years: 0.004", "5-64 years: 4.688 x 10^-5","65+ years: 6.197 x 10^-5", 
-            "", "<5 years: 2.336 × 10^-3", "≥5 years: 1.448 × 10^-3","<5 years: 4.098 × 10^-3", "≥5 years: 2.990 × 10^-3"),
+            "<5 years: 8.197 x 10^-6", "≥5 years: 5.697 x 10^-6","<5 years: 0.004", "5-64 years: 4.688 x 10^-5","65+ years: 6.197 x 10^-5"),
   Reference = c(" ", "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>", "<a href= 'https://www.thelancet.com/journals/lanepe/article/PIIS2666-7762(23)00248-X/fulltext'>25</a> ", 
                 "<a href= 'https://www.thelancet.com/journals/lanepe/article/PIIS2666-7762(23)00248-X/fulltext'>25</a>","", "<a href= 'https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthandlifeexpectancies/articles/lifeexpectancycalculator/2019-06-07'>24</a> ",
                 "", "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
-                "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
-                "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>", "",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>",
                 "<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>","<a href= 'https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-020-01802-8'>15</a>")
 )
@@ -75,9 +71,9 @@ table_2$Value <- gsub("<", "&lt;", table_2$Value, fixed = TRUE)
 table_2 <- kable(table_2, "html", booktabs = TRUE,escape = FALSE, na.action = "insert") %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(19, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(c(2,4,6,8,10,12,14,16,18), color = "black", background = "#fde4e2") %>% 
-  row_spec(c(1,3,5,7,9,11,13,15,17,19), color = "black", background = "white") %>% 
+  row_spec(14, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
+  row_spec(c(2,4,6,8,10,12,14), color = "black", background = "#fde4e2") %>% 
+  row_spec(c(1,3,5,7,9,11,13), color = "black", background = "white") %>% 
   column_spec(1, width = "33%", border_left = TRUE) %>%  
   column_spec(2, width = "33%", ) %>%  
   column_spec(3, width = "33%", border_right = TRUE) %>%
@@ -88,7 +84,7 @@ table_2 <- kable(table_2, "html", booktabs = TRUE,escape = FALSE, na.action = "i
 table_2
 
 # table 3
-table_2_1 <- data.frame(
+table_3 <- data.frame(
   x = c("T<sub>cea</sub>", "T<sub>mort</sub>","<b><i>Palivizumab</i></b>", "ω<sub>pal</sub>","e<sub>pal</sub>","uptake<sub>pal</sub>", "admin<sub>pal</sub>", "cost<sub>pal</sub>","<b><i>Nirservimab</i></b>","ω<sub>lmab</sub>","e<sub>lmab</sub>","uptake<sub>lmab</sub>", "admin<sub>lmab</sub>", "cost<sub>lmab</sub>", 
      "<b><i>Abrysvo/maternal vaccine</i></b>", "ω<sub>mat</sub>","e<sub>mat</sub>","uptake<sub>mat</sub>", "admin<sub>mat</sub>", "cost<sub>mat</sub>","<b><i>Abrysvo/elderly vaccine</i></b>",
      "ω<sub>65+</sub>","e<sub>mat</sub>","uptake<sub>65+</sub>", "admin<sub>65+</sub>", "cost<sub>65+</sub>"),
@@ -108,9 +104,9 @@ table_2_1 <- data.frame(
   stringsAsFactors = FALSE
 )
 
-table_2_1$Value <- gsub("<", "&lt;", table_2_1$Value, fixed = TRUE) 
+table_3$Value <- gsub("<", "&lt;", table_3$Value, fixed = TRUE) 
 
-table_2_1 <- kable(table_2_1, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("", "Parameter", "Value", "Reference")) %>%
+table_3 <- kable(table_3, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("", "Parameter", "Value", "Reference")) %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
   row_spec(c(2,4,6,8,10,12,14,16,18,20,22,24,26), color = "black", background = "#fde4e2") %>% 
@@ -124,10 +120,11 @@ table_2_1 <- kable(table_2_1, "html", booktabs = TRUE,escape = FALSE, na.action 
            threeparttable = TRUE,
            general_title = "Table 2: Intervention model and Economic parameters used in this study",
            title_format = "bold") 
-table_2_1
+table_3
 
 ## table 1 supplementary
-table_1_sup <- data.frame(
+
+table_3_averted <- data.frame(
   Intervention = c("<b><i>Palivizumab</i></b>", "","", "", "<b><i>Niservimab</i></b>", "", "",
                    "", "<b><i>Abrysvo/maternal vaccine</i></b>", "", "", "","<b><i>Abrysvo/elderly vaccine</i></b>",
                    "", "", ""),
@@ -136,28 +133,28 @@ table_1_sup <- data.frame(
                   "","0-4 years","5-64 years", "65+",
                   "","0-4 years","5-64 years",  "65+"),
   
-  'Cases averted' = c("","13532", "2461", "48", 
-                      "","90270", "15548","234",
-                      "","32921", "5927", "113",
-                      "","87", "57","382"),
+  'Cases averted' = c("","4511", "820", "16", 
+                      "","30090", "5183","78",
+                      "","10522", "107", "21",
+                      "","29", "19","127"),
   
-  'GP consultations averted' = c("","81",  "31",  "1", 
-                        "","542", "429", "4",
-                        "","198",  "95", "2",
-                        "","0", "1", "6"),
+  'GP consultations averted' = c("","27",  "13",  "0", 
+                        "","181", "143", "1",
+                        "","63",  "1", "0",
+                        "","0", "0", "2"),
   
-  'Hospital admissions averted' = c("","54","1", "0",
-                            "","361", "7", "0",
-                            "","132", "3", "0",
+  'Hospital admissions averted' = c("","18","0", "0",
+                            "","120", "2", "0",
+                            "","42", "1", "0",
                             "","0", "0", "0"),
   
-  'Deaths averted' = c("","1", "0", "0",
-            "","7", "1", "0",
-            "","3", "0", "0",
+  'Deaths averted' = c("","0", "0", "0",
+            "","2", "0", "0",
+            "","1", "0", "0",
             "","0", "0","0") 
 )
 
-table_1_sup <- kable(table_1_sup, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
+table_3_averted <- kable(table_3_averted, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
   row_spec(c(2,4,6,8,10,12,14,16), color = "black", background = "#fde4e2") %>% 
@@ -171,8 +168,8 @@ table_1_sup <- kable(table_1_sup, "html", booktabs = TRUE,escape = FALSE, na.act
   column_spec(6, width = "16.67%%%", border_right = TRUE) %>%
   footnote(general = "", 
            threeparttable = TRUE,
-           general_title = "Table 3: Number of RSV cases, GP consulations, hospital admissions and deaths averted per intervention by age group",
+           general_title = "Table 3: Seasonal number of RSV cases, GP consulations, hospital admissions and deaths averted per intervention by age group",
            title_format = "bold") 
 
-table_1_sup
+table_3_averted
 

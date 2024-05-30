@@ -13,7 +13,7 @@ annual_incidence(results_base)
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
   Incidence = c(1531380.51, 494402.44, 10430.79),  # incidence 
-  Population = 52771252 # Population at risk for each age group
+  Population = c(2717451, 41165080, 9502007) # population at risk for each age group
 )
 
 # Calculate incidence per 100,000 population at risk

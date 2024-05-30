@@ -8,12 +8,28 @@ library(pacman)
 
 pacman::p_load(tidyverse, viridisLite, viridis, patchwork)
 
-# save current table 3 as table 3_1 to avoid losing data
+# table 3_1 cost-effect
+table_3_1 <- data.frame(
+  Intervention = c("Palivizumab", "Niservimab", "Maternal vaccine","Elderly vaccine"),
+  'Symptomatic/GP ' = c(40,325,64,2),
+  'Hosp admission ' = c(18,122,43,0), 
+  'Death' = c(0,2,1,0),
+  'Life years gained' = c(0,130,65,0),
+  'Incr cost GP' = c(121585218, 17079909,100772955, 103668),
+  'Incr cost hosp'= c(121566854,16959581,100729049,103740),
+  'Age group' = c('0-4 years','5-64 years','65+', "0"),
+  'No of cases' = c(5347,35351,10650,175),
+  'No hosp' = c(18,122,43,0),
+  'No death'= c(0, 2,1,0),
+  'No GP' = c(40,325,64,2)
+)
+
+# save current table 3_1 as table 3_2 to avoid losing data
 ### save so it doesnt get overridden by table_3
-write.csv(table_3, file = "table_3_1.csv")
+write.csv(table_3_1, file = "table_3_2.csv")
 
 # prepare 
-long_data_3 <- table_3 %>%
+long_data_3 <- table_3_1 %>%
   select(Intervention, No.GP, No.hosp, No.death) %>%
   gather(key = "Metric", value = "Value", -Intervention)
 
@@ -25,7 +41,7 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
                                "No.death" = "#20908c"),
                     labels = c("No.GP" = "GP visit", "No.hosp" = "Hospitalization", "No.death" = "Death")) +
   labs(title = "Number of health outcomes averted per intervention",
-       x = "", y = "Percentage (%)", tag = "B") +
+       x = "", y = "Number of outcomes", tag = "B") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5, size = 14),
@@ -44,7 +60,7 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
         strip.text.x = element_text(size = 5)) 
 
 # plot number of cases by intervention
-table_3_arrange <- table_3 %>%
+table_3_arrange <- table_3_2 %>%
   arrange(desc(No.of.cases)) %>%
   mutate(Intervention = factor(Intervention, levels = unique(Intervention)))
 
@@ -55,7 +71,7 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
                                "Maternal vaccine" = "#1f77b4", 
                                "Elderly vaccine" = "#00BFFF")) +
   labs(title = "Number of cases averted per intervention",
-       x = "", y = "",
+       x = "", y = "Number of cases",
        tag = "A") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
@@ -75,17 +91,17 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
         plot.tag=element_text(face="bold")) 
 
 # plot costs 
-table_3_2 <- table_3 %>%
+table_3_3 <- table_3_2 %>%
   # filter(Intervention != "Elderly vaccine") %>%
   mutate(
     Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost.GP / Symptomatic.GP., 0),
     Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost.hosp / Hosp.admission., 0),
-    Cost_per_Death = ifelse(Death > 0, 362075963 / Death, 0),  
+    Cost_per_Death = ifelse(Death > 0, 121585218 / Death, 0),  
     Cost_per_Life_Year_Gained = c(4259717,86946,67561.83,0,0,0,0,0,0,0,0,0))
 
 
 # transform the costs 
-cost_data <- table_3_2 %>%
+cost_data <- table_3_3 %>%
   select(Intervention, Cost_per_GP_visit, Cost_per_Hospitalization, Cost_per_Death, Cost_per_Life_Year_Gained) %>%
   pivot_longer(cols = starts_with("Cost"), names_to = "Category", values_to = "Cost") %>%
   mutate(Category = recode(Category,
@@ -105,7 +121,7 @@ incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.38, y = 3.5e6, label = "£20,000 (willingness-to-pay threshold)", vjust = -0.5, color = "black", size = 4) +
+  annotate("text", x = 1.38, y = 3.5e6, label = "£52,554 (lowest ICER, per GP visit with Niservimab)", vjust = -0.5, color = "black", size = 4) +
   geom_segment(aes(x = 1.5, y = 2.5e6, xend = 1.5, yend = 20000), 
                arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +

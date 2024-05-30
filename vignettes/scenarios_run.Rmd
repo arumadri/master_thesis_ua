@@ -1,6 +1,8 @@
 # Vignette for running analysis using the RSV model and plotting figures and generating plots 
 
-## 1. Generate initial states
+## 1. Set working directory to folder with cloned repository on your device 
+
+## 2. Generate initial states
 
 ```{r}
 
@@ -14,10 +16,35 @@ source("functions/RunInterventions.R")
 
 Follow instructions in `generate_initial_states.R` in /src folder to complete this step
 
-## 2. Load model and parameters
+## 3. Load model and parameters
 
 ```{r}
 # load model 
 source("functions/run_model_merged.R")
 
 ```
+## 4. Run scenarios and estimate cost-effectiveness
+
+Open `scenarios_cost_effect.R` in /src folder to run scenarios. Also use this R script to generate the plots on model stabilization, and plots of incidence per intervention scenario.
+
+## 5. Plotting figures
+
+To generate figure 3, use the `figure_3.R` script in /src folder. For all the plots, you may get the error below, ignore it
+```{r, echo=TRUE}
+ plot_incidence(results_base, " Base: No intervention", "base")
+
+#Warning: Removed 3 rows containing missing values (`geom_line()`).
+#Warning: Removed 3 rows containing missing values (`geom_line()`).
+#Warning: Removed 3 rows containing missing values (`geom_line()`).
+#Warning: Removed 3 rows containing missing values (`geom_line()`).
+
+ # this is not true since there are no missing values 
+
+ sum(is.na(results_base))
+# [1] 0
+
+```
+## 6. Generating tables 
+
+Use `tables.R` to generate all tables 
+
