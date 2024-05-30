@@ -121,7 +121,7 @@ incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.38, y = 3.5e6, label = "£52,554 (lowest ICER, per GP visit with Niservimab)", vjust = -0.5, color = "black", size = 4) +
+  annotate("text", x = 1.38, y = 4e6, label = "£52,554 (lowest ICER, per GP visit with Niservimab)", vjust = -0.5, color = "black", size = 4) +
   geom_segment(aes(x = 1.5, y = 2.5e6, xend = 1.5, yend = 20000), 
                arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
