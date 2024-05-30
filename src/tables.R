@@ -125,47 +125,58 @@ table_3
 ## table 1 supplementary
 
 table_3_averted <- data.frame(
-  Intervention = c("<b><i>Palivizumab</i></b>", "","", "", "<b><i>Niservimab</i></b>", "", "",
+  Intervention = c("<b><i>Base scenario<i></b>", "","","","<b><i>Palivizumab</i></b>", "","", "", "<b><i>Niservimab</i></b>", "", "",
                    "", "<b><i>Abrysvo/maternal vaccine</i></b>", "", "", "","<b><i>Abrysvo/elderly vaccine</i></b>",
                    "", "", ""),
-  'Age group' = c("","0-4 years", "5-64 years","65+", 
+  'Age group' = c("","0-4 years", "5-64 years","65+",
+                  "","0-4 years", "5-64 years","65+", 
                   "","0-4 years", "5-64 years", "65+",
                   "","0-4 years","5-64 years", "65+",
                   "","0-4 years","5-64 years",  "65+"),
+  'Base cases' = c("","1535069", "497465", "10542", 
+                     "","", "", "",
+                     "","", "", "",
+                     "","", "", "",
+                     "","","",""),
   
-  'Cases averted' = c("","4511", "820", "16", 
+  'Cases averted' = c("","0","0","0",
+                      "","4511", "820", "16", 
                       "","30090", "5183","78",
                       "","10522", "107", "21",
                       "","29", "19","127"),
   
-  'GP consultations averted' = c("","27",  "13",  "0", 
-                        "","181", "143", "1",
-                        "","63",  "1", "0",
-                        "","0", "0", "2"),
+  'GP consultations averted' = c("","0","0","0",
+                                 "","27",  "13",  "0", 
+                                 "","181", "143", "1",
+                                 "","63",  "1", "0",
+                                 "","0", "0", "2"),
   
-  'Hospital admissions averted' = c("","18","0", "0",
-                            "","120", "2", "0",
-                            "","42", "1", "0",
-                            "","0", "0", "0"),
+  'Hospital admissions averted' = c("","0","0","0",
+                                    "","18","0", "0",
+                                    "","120", "2", "0",
+                                    "","42", "1", "0",
+                                    "","0", "0", "0"),
   
-  'Deaths averted' = c("","0", "0", "0",
-            "","2", "0", "0",
-            "","1", "0", "0",
-            "","0", "0","0") 
+  'Deaths averted' = c("","0","0","0",
+                       "","0", "0", "0",
+                       "","2", "0", "0",
+                       "","1", "0", "0",
+                       "","0", "0","0") 
 )
 
-table_3_averted <- kable(table_3_averted, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
+table_3_averted <- kable(table_3_averted, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Base cases", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(c(2,4,6,8,10,12,14,16), color = "black", background = "#fde4e2") %>% 
-  row_spec(16, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
-  row_spec(c(1,3,5,7,9,11,13,15), color = "black", background = "white") %>% 
+  row_spec(c(2,4,6,8,10,12,14,16,18,20), color = "black", background = "#fde4e2") %>% 
+  row_spec(20, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
+  row_spec(c(1,3,5,7,9,11,13,15,17), color = "black", background = "white") %>% 
   column_spec(1, width = "20.67%%", border_left = TRUE) %>% 
   column_spec(2, width = "20.67%%") %>% 
-  column_spec(3, width = "16.67%%") %>% 
+  column_spec(3, width = "16.67%%") %>%  
   column_spec(4, width = "16.67%%") %>% 
-  column_spec(5, width = "16.67%%") %>%  
-  column_spec(6, width = "16.67%%%", border_right = TRUE) %>%
+  column_spec(5, width = "16.67%%") %>% 
+  column_spec(6, width = "16.67%%") %>%  
+  column_spec(7, width = "16.67%%%", border_right = TRUE) %>%
   footnote(general = "", 
            threeparttable = TRUE,
            general_title = "Table 3: Seasonal number of RSV cases, GP consulations, hospital admissions and deaths averted per intervention by age group",
