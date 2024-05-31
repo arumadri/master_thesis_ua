@@ -27,18 +27,18 @@ params <- list(b1           = 1.998,                            # relative ampli
                g2           = 0.79,                             # decrease in subsequent infection duration relative to secondary
                gamma3       = 1,                                # duration of infectiousness for all infections after tertiary infection
                omega        = 1/358.9,                          # rate of loss of disease-induced/post-infection immunity
-               age_r_1        = 1/(365*5),                      # aging rate, age group 1
-               age_r_2        = 1/(365*60),                     # aging rate, age group 2
-               age_r_3        = 1/(365*25),                     # aging rate, age group 3
+               age_r_1      = 1/(365*5),                        # aging rate, age group 1
+               age_r_2      = 1/(365*60),                       # aging rate, age group 2
+               age_r_3      = 1/(365*25),                       # aging rate, age group 3
                waning_rate1 = 0,                                # vaccine-induced waning rate, age group 1
                waning_rate2 = 0,                                # vaccine-induced waning rate, age group 2
                waning_rate3 = 0,                                # vaccine-induced waning rate, age group 3
-               uptake1 = 0,                                     # uptake rate of intervention, age group 1
-               uptake2 = 0,                                     # uptake rate of intervention, age group 2
-               uptake3 = 0,                                     # uptake rate of intervention, age group 3
-               vac_eff1 = 0,                                    # vaccine efficacy, age group 1
-               vac_eff2 = 0,                                    # vaccine efficacy, age group 2
-               vac_eff3 = 0                                     # vaccine efficacy, age group 3
+               uptake1      = 0,                                # uptake rate of intervention, age group 1
+               uptake2      = 0,                                # uptake rate of intervention, age group 2
+               uptake3      = 0,                                # uptake rate of intervention, age group 3
+               vac_eff1     = 0,                                # vaccine efficacy, age group 1
+               vac_eff2     = 0,                                # vaccine efficacy, age group 2
+               vac_eff3     = 0                                 # vaccine efficacy, age group 3
                
 )
 
