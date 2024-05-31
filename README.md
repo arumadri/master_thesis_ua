@@ -16,14 +16,14 @@ Clone the repository and look through the RMarkdown file in the /vingettes folde
 ## Overview of files 
 ### /data folder 
 + `posteriors.Rda`, is dataframe which contains posterior distributions from Hodgson et al 2020.
-+ `uk_data_sum.RData`, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
 + `states.csv`, is a dataframe which contains the generated initial states used in this study. The procedure is described in the /vignettes folder.
++ `uk_data_sum.RData`, is a dataframe which contains information on the population of England and Wales used for generating the initial states.
 
 ### /figs folder 
-+ contains main and supplementary plots output of this study.
++ contains main and supplementary plots and tables.
 
 ### /parameter_sources folder
-+ contains source publication for costs, model and intervention parameters.
++ contains source publications for costs, model and intervention parameters.
 
 ### /functions folder 
 + `RunInterventions.R`, contains all the funtions used for the analysis, generating tables and figures.
@@ -31,7 +31,7 @@ Clone the repository and look through the RMarkdown file in the /vingettes folde
 
 ### /src folder 
 + `aging_check.R`, a walkthrough to assess the implementation of the aging process in the model.
-+ `check_health.R`, a walkthrough to assess the implementation of the epidemiological process of the model.
++ `check_health_vac.R`, a walkthrough to assess the implementation of the epidemiological and vaccination process of the model.
 + `figure_3.R`, plotting function for figure 3 in the main outputs.
 + `generate_initial_states.R`, a walkthrough of generating the initial states.
 + `incidence_comparison.R`, plotting function for figure 1 in the main outputs.
