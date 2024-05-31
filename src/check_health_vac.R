@@ -24,12 +24,12 @@ params_check <- list(b1     = 1.998,                            # relative ampli
                waning_rate1 = 0,                                # vaccine-induced waning rate, age group 1
                waning_rate2 = 0,                                # vaccine-induced waning rate, age group 2
                waning_rate3 = 0,                                # vaccine-induced waning rate, age group 3
-               uptake1      = 0.8,                                # uptake rate of intervention, age group 1
-               uptake2      = 0.8,                                # uptake rate of intervention, age group 2
-               uptake3      = 0.8,                                # uptake rate of intervention, age group 3
-               vac_eff1     = 0.6,                                # vaccine efficacy, age group 1
-               vac_eff2     = 0.6,                                # vaccine efficacy, age group 2
-               vac_eff3     = 0.6                                 # vaccine efficacy, age group 3
+               uptake1      = 0.8,                              # uptake rate of intervention, age group 1
+               uptake2      = 0.8,                              # uptake rate of intervention, age group 2
+               uptake3      = 0.8,                              # uptake rate of intervention, age group 3
+               vac_eff1     = 0.6,                              # vaccine efficacy, age group 1
+               vac_eff2     = 0.6,                              # vaccine efficacy, age group 2
+               vac_eff3     = 0.6                               # vaccine efficacy, age group 3
                
 )
 calculate_gamma <- function(params) {
