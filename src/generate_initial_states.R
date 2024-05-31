@@ -22,11 +22,7 @@ ParameterValuesforODE(currentParamValues)
 # generate inital M
 ageStratification = uk_data_sum$ageGroupBoundary
 populationPerAgeGroup = uk_data_sum$populationAgeGroup
-initial_M(param_means, ageStratification, populationPerAgeGroup)
 
-pVHR <- uk_data_sum$pVHR
-pHR <- uk_data_sum$pHR
-pLR <- uk_data_sum$pLR
 initialStates_i <- generateInitialStates(param_means, ageStratification, populationPerAgeGroup)
 initial_states <- matrix(as.numeric(initialStates_i), nrow = 26, byrow = FALSE)
 
@@ -42,11 +38,3 @@ for (i in 1:25) {
 }
 
 state_initial
-
-cases <- rowSums(uk_data_sum$observationalData[, -1], na.rm = TRUE)
-
-uk_data_sum$observationalData$total <- cases
-sum(cases)
-
-plot(uk_data_sum$observationalData$X, uk_data_sum$observationalData$total, type = 'l')
-
