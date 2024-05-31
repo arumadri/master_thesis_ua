@@ -25,22 +25,18 @@ params_none$vac_eff1         <- 0
 params_none$vac_eff2         <- 0                                    
 params_none$vac_eff3         <- 0
 
-results_base_run <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
-                    parms = params_none, method = "ode23")
-
-# plot model performance over time horizon
-model_stabilize <- plot_figures(results_base_run, programme_name = "Model stabilization", 
-                                "Model becomes stable after 6 years")
-
 ## scenario analysis 
 # base: no intervention
 results_base <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                         parms = params_none, method = "ode23")
 
 # no. of cases 
-round(new_cases(results_base), digits = 0) #  
-# c(6140276 1989860   42169 ) 
+round(new_cases(results_base), digits = 0) # 1621452  420636    9426
 # averted c(0,0,0)
+
+# plot model performance over time horizon
+model_stabilize <- plot_figures(results_base, programme_name = "Model stabilization", 
+                                "Model becomes stable after 6 years")
 
 # plot incidence
 baseline_incidence <- plot_incidence(results_base, "Baseline: No intervention", "Black dotdashed and dashed lines mark the upper and lower limit of baseline incidence respectively")
@@ -64,9 +60,9 @@ params_pmab$vac_eff3         <- 0
 results_pmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_pmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_pmab), digits = 0)  # 6140276 1989860   42169 
-## 6126744 1987399   42121 
-# averted c(13532, 2461,48)
+round(new_cases(results_pmab), digits = 0)  # 1621452  420636    9426
+## 1620448  420570    9426 
+# averted c(1004, 66,0)
 
 #plot
 palivizumab_incidence <- plot_incidence(results_pmab, "Palivizumab", "Black dotdash and dashed lines mark the upper and lower limit of baseline incidence respectively") 
@@ -87,9 +83,9 @@ params_nmab$vac_eff3         <- 0
 results_nmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_nmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_nmab), digits = 0) # 6140276 1989860   42169
-## 6050006 1974312   41935 
-# averted c(90270, 15548, 234)
+round(new_cases(results_nmab), digits = 0) # 1621452  420636    9426
+## 1608494  419979    9434 
+# averted c(12958, 657, -8)
 
 #plot
 niservimab_incidence <- plot_incidence(results_nmab, "Niservimab", "Black dotdash and dashed lines mark the upper and lower limit of baseline incidence respectively") 
@@ -100,8 +96,8 @@ params_mat <- params
 params_mat$waning_rate1 <- 1/180                                 
 params_mat$waning_rate2 <- 1/180                                 
 params_mat$waning_rate3 <- 0                                  
-params_mat$uptake1      <- 0.6*0.5   # 0.5 = proportion of newborns in 0-4 year age group pop. (679995/ 1477479)                           
-params_mat$uptake2      <- 0.6*0.2  # 0.2 = proportion of pregnant women in 5-64 year age group pop. (679995/41200378)                          
+params_mat$uptake1      <- 0.6*0.5   # 0.5 = proportion of newborns in 0-4 year age group pop. (679995/1496623)                           
+params_mat$uptake2      <- 0.6*0.2  # 0.2 = proportion of pregnant women in 5-64 year age group pop. (679995/4120037.8)                          
 params_mat$uptake3      <- 0                                
 params_mat$vac_eff1         <- 0.513                                 
 params_mat$vac_eff2         <- 0.717                                   
@@ -111,9 +107,9 @@ results_mat <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age
                     parms = params_mat, method = "ode23")
 
 # no. of cases 
-round(new_cases(results_mat), digits = 0) # 6140276 1989860   42169
-## 6108710 1989539   42106
-# averted c(31566, 321, 63)
+round(new_cases(results_mat), digits = 0) # 1621452  420636    9426
+## 1617042  420677    9427 
+# averted c(4410, -41, -1)
 
 #plot
 maternal_incidence <- plot_incidence(results_mat, "Maternal vaccination", "Black dotdash and dashed lines mark the upper and lower limit of baseline incidence respectively") 
@@ -134,9 +130,9 @@ params_old$vac_eff3         <- 0.667
 results_old <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                    parms = params_old, method = "ode23")
 # no. of cases 
-round(new_cases(results_old), digits = 0) # 6140276 1989860   42169
-## 6140189 1989803   41787 
-# averted c(87, 57,382) 
+round(new_cases(results_old), digits = 0) # 1621452  420636    9426
+## 1621458  420638    9366  
+# averted c(-6, -2,60) 
 
 #plot
 elderly_incidence <- plot_incidence(results_old, "Elderly vaccination", "Black dotdash and dashed lines mark the upper and lower limit of baseline incidence respectively") 
@@ -145,16 +141,10 @@ ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 1
 ## cost effectiveness
 
 ## no. cases averted
-# palivizimab = c(13532, 2461,48)
-# niservimab  = c(90270, 15548, 234)
-# maternal    = c(31566, 321, 63)
-# elderly     = c(87, 57,382)
-
-# no. cases averted per season
-# palivizimab = c(4511, 820,16)
-# niservimab  = c(30090, 5183, 78)
-# maternal    = c(10522, 107, 21)
-# elderly     = c(29, 19,127)
+# palivizimab = c(1004, 66,0)
+# niservimab  = c(12958, 657, -8)
+# maternal    = c(4410, -41, -1)
+# elderly     = c(-6, -2,60)
 
 ## per-infection probabilities to estimate clinical outcomes 
 ## averted symptomatic/GP probability per-infection 
@@ -172,28 +162,28 @@ ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 1
 
 ## averted per health outcome per season
 ## GP 
-# palivizimab = c(27, 13,0)
-# niservimab  = c(181, 143, 1)
-# maternal    = c(63, 1, 0)
-# elderly     = c(0, 0,2)
+# palivizimab = c(6, 1,0)
+# niservimab  = c(78, 11, 0)
+# maternal    = c(27, 0, 0)
+# elderly     = c(0, 0,1)
 
 ## hospitalizations
-# palivizimab = c(18, 0,0)
-# niservimab  = c(120, 2, 0)
-# maternal    = c(42, 1, 0)
+# palivizimab = c(4, 0,0)
+# niservimab  = c(52, 0, 0)
+# maternal    = c(18, 0, 0)
 # elderly     = c(0, 0,0)
 
 ## death
 # palivizimab = c(0, 0,0)
-# niservimab  = c(2, 0, 0)
-# maternal    = c(1, 0, 0)
+# niservimab  = c(1, 0, 0)
+# maternal    = c(0, 0, 0)
 # elderly     = c(0, 0,0)
 
-## uptake per season  
-# palivizimab = (97654.98)*0.9*0.338  = 29706
-# niservimab  = (97654.98)*0.9*0.781  = 68641
-# maternal    = (679995)*0.6 =  407997
-# elderly     = (899.9644)*0.7*0.667 = 420
+## uptake per season                     # use sum(results_base[2464, c("S01", "S11", "S21")]) to determine uptake for palivizumab and niservimab
+# palivizimab = (92328)*0.9  = 83095
+# niservimab  = (92328)*0.9  = 83095
+# maternal    = (679995)*0.6 =  407997   # 1863*365
+# elderly     = (723)*0.7    = 506       # sum(results_base[2464, c("S03", "S13", "S23")])
 
 ## costs (admin + price )
 # palivizimab = (57.50+4035.50) = 4093
@@ -205,21 +195,7 @@ ggsave("elderly_incidence.pdf", plot = elderly_incidence, width = 15, height = 1
 ## Hosp admin     = 1100.23 (<5yr), 652.29 (>5yr)
 
 ### incremental cost 
-## GP/symptomatic 
- # palivizimab = (29706*4093) - (40*36.00) = 121585218
- # niservimab  = (68641*249)  - (325*36.00) = 17079909
- # maternal    = (407997*247) - (64*36.00)  = 100772955
- # elderly     = (420*247) - (2*36.00)   = 103668
-
-## Hosp admin 
-## < 5 years
-# palivizimab = (29706*4093)  - (18*1100.23) = 121566854
-# niservimab  = (68641*249) - (120*1100.23) = 16959581
-# maternal    = (407997*247) - (42*1100.23)  = 100729049
-# elderly     = (420*247)   - (0*1100.23)   = 103740
-
-## > 5 years 
-# palivizimab = (29706*4093) - (0*652.29) = 121586658
-# niservimab  = (68641*249) - (2*652.29) = 17090304
-# maternal    = (407997*247) - (0*652.29) = 100775259
-# elderly     = (420*247) - (0*652.29)   = 103740
+ # palivizimab = (83095*4093) - (7*36.00) - (4*1100.23) = 340103182
+ # niservimab  = (83095*249)  - (89*36.00) -(52*1100.23) - (2*652.29) = 20628934
+ # maternal    = (407997*247) - (27*36.00) - (18*1100.23) = 100754483
+ # elderly     = (506*247) - (1*36.00)   = 124946

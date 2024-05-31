@@ -21,15 +21,15 @@ params <- list(b1           = 1.998,                            # relative ampli
                propR        = 0.5,                              # proportion of neonates born with protection
                mu           = 1863,                             # daily birth rate 
                xi           = 1/133.5,                          # rate of loss maternal immunity
-               probA        = c(0.255, 0.635,0.753),            # probability infection is asymptomatic
-               g0           = 6.062,                            # rate of loss of primary infectiousness
-               g1           = 0.878,                            # proportional decrease between secondary and primary infection
-               g2           = 0.812,                            # proportional decrease between tertiary and secondary infection
+               probA        = c(0.127, 0.635,0.753),            # probability infection is asymptomatic
+               g0           = 6.16,                             # rate of loss of primary infectiousness
+               g1           = 0.87,                             # decrease in secondary infection duration relative to primary
+               g2           = 0.79,                             # decrease in subsequent infection duration relative to secondary
                gamma3       = 1,                                # duration of infectiousness for all infections after tertiary infection
                omega        = 1/358.9,                          # rate of loss of disease-induced/post-infection immunity
-               age_r_1        = 1/(365*4),                      # aging rate, age group 1
-               age_r_2        = 1/(365*59),                     # aging rate, age group 2
-               age_r_3        = 1/(365*10),                     # aging rate, age group 3
+               age_r_1        = 1/(365*5),                      # aging rate, age group 1
+               age_r_2        = 1/(365*60),                     # aging rate, age group 2
+               age_r_3        = 1/(365*25),                     # aging rate, age group 3
                waning_rate1 = 0,                                # vaccine-induced waning rate, age group 1
                waning_rate2 = 0,                                # vaccine-induced waning rate, age group 2
                waning_rate3 = 0,                                # vaccine-induced waning rate, age group 3
@@ -134,8 +134,6 @@ rsv_model_age <- function(t, state_initial_age, params){
   d1     = params[['d1']]
   d2     = params[['d2']]
   d3     = params[['d3']]
-  qp     = params[['qp']]
-  qc     = params[['qc']]
   age_r  = c(params[['age_r_1']], params[['age_r_2']], params[['age_r_3']])
   uptake = c(params[['uptake1']], params[['uptake2']], params[['uptake3']]) 
   vac_eff = c(params[['vac_eff1']], params[['vac_eff2']], params[['vac_eff3']]) 
@@ -227,35 +225,31 @@ rsv_model_age <- function(t, state_initial_age, params){
   t1 = t %% 365
   
   year_length = 365
-  vac_day = 300  # assumption is that eligible individuals are vaccinated by this date  
+  vac_day = 274  # 1st October, start of RSV season in UK, assumption is that eligible individuals are vaccinated by this date  
   start_year = 6 
-  end_year = 10  
+  end_year = 7  # intervention for one season 
   
   # start and end day for vaccination
   start_vaccination_day = vac_day + (start_year * year_length)
-  end_vaccination_day = vac_day + ((end_year - 1) * year_length)
+  end_vaccination_day = (end_year * year_length)
   
   if (t >= start_vaccination_day && t <= end_vaccination_day && abs(t1 - vac_day) <= 1) {
 
     dS0_vac = (S0 * uptake* vac_eff)
-    dS0 = dS0 - dS0_vac
-    dV0_vac = dV0 + dS0_vac 
-    dV0 = dV0 + dV0_vac
+    dS0     = dS0 - dS0_vac
+    dV0     = dV0 + dS0_vac
     
     dS1_vac = (S1 * uptake* vac_eff)
-    dS1 = dS1 - dS1_vac
-    dV1_vac = dV1 + dS1_vac 
-    dV1 = dV1 + dV1_vac
+    dS1     = dS1 - dS1_vac
+    dV1     = dV1 + dS1_vac
 
     dS2_vac = (S2 * uptake* vac_eff)
-    dS2 = dS2 - dS2_vac
-    dV2_vac = dV2 + dS2_vac 
-    dV2 = dV2 + dV2_vac
+    dS2     = dS2 - dS2_vac
+    dV2     = dV2 + dS2_vac
 
     # dS3_vac = (S3 * uptake* vac_eff)  ## exclude vaccination in exposure level 3
-    # dS3 = dS3 - dS3_vac
-    # dV3_vac = dV3 + dS3_vac 
-    # dV3 = dV3 + dV3_vac
+    # dS3     = dS3 - dS3_vac
+    # dV3     = dV3 + dS3_vac
   }
   
   # beta
@@ -294,11 +288,15 @@ rsv_model_age <- function(t, state_initial_age, params){
   dV2 = dV2 - V2*waning_rate 
   
   dS3 = dS3 + R2*omega + R3*omega - S3*lambda3 + V3*waning_rate
-  dE3 = dE3 + dE3 + S3*lambda3 - E3*sigma 
+  dE3 = dE3 + S3*lambda3 - E3*sigma 
   dA3 = dA3 + E3*probA*sigma - A3*gamma3 
   dI3 = dI3 + E3*(1-probA)*sigma - I3*gamma3
   dR3 = dR3 + I3*gamma3 + A3*gamma3 - R3*omega
   dV3 = dV3 - V3*waning_rate 
+  
+  threshold <- 0.999 # threshold for any values below 1
+  
+  dS3 <- ifelse(dS3 < threshold, 0, dS3)
   
   dZ = sigma * (E0+E1+E2+E3)
   

@@ -48,3 +48,4 @@ To generate figure 3, use the `figure_3.R` script in /src folder. For all the pl
 
 Use `tables.R` to generate all tables 
 
+Note: The generated tables can be saved by copying to the clipboard and pasting to word or zooming in Viewer in RStudio taking a screenshot of the table. 

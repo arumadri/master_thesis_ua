@@ -46,9 +46,8 @@ table_1 <- kable(table_1, "html", booktabs = TRUE,escape = FALSE, na.action = "i
            general_title = "Table 1: Model parameters used in the transmission model of RSV",
            title_format = "bold") 
 
-# save by copying to clipboard 
+# save by copying to clipboard or by zooming out in viewer and taking a screenshot 
 table_1
-
 
 # table 2
 table_2 <- data.frame(
@@ -81,10 +80,11 @@ table_2 <- kable(table_2, "html", booktabs = TRUE,escape = FALSE, na.action = "i
            threeparttable = TRUE,
            general_title = "Table 2: Intervention model and Economic parameters used in this study",
            title_format = "bold") 
+# save by copying to clipboard or by zooming out in viewer and taking a screenshot 
 table_2
 
 # table 3
-table_3 <- data.frame(
+table_2_1 <- data.frame(
   x = c("T<sub>cea</sub>", "T<sub>mort</sub>","<b><i>Palivizumab</i></b>", "ω<sub>pal</sub>","e<sub>pal</sub>","uptake<sub>pal</sub>", "admin<sub>pal</sub>", "cost<sub>pal</sub>","<b><i>Nirservimab</i></b>","ω<sub>lmab</sub>","e<sub>lmab</sub>","uptake<sub>lmab</sub>", "admin<sub>lmab</sub>", "cost<sub>lmab</sub>", 
      "<b><i>Abrysvo/maternal vaccine</i></b>", "ω<sub>mat</sub>","e<sub>mat</sub>","uptake<sub>mat</sub>", "admin<sub>mat</sub>", "cost<sub>mat</sub>","<b><i>Abrysvo/elderly vaccine</i></b>",
      "ω<sub>65+</sub>","e<sub>mat</sub>","uptake<sub>65+</sub>", "admin<sub>65+</sub>", "cost<sub>65+</sub>"),
@@ -104,9 +104,9 @@ table_3 <- data.frame(
   stringsAsFactors = FALSE
 )
 
-table_3$Value <- gsub("<", "&lt;", table_3$Value, fixed = TRUE) 
+table_2_1$Value <- gsub("<", "&lt;", table_2_1$Value, fixed = TRUE) 
 
-table_3 <- kable(table_3, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("", "Parameter", "Value", "Reference")) %>%
+table_2_1 <- kable(table_2_1, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("", "Parameter", "Value", "Reference")) %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
   row_spec(c(2,4,6,8,10,12,14,16,18,20,22,24,26), color = "black", background = "#fde4e2") %>% 
@@ -120,9 +120,10 @@ table_3 <- kable(table_3, "html", booktabs = TRUE,escape = FALSE, na.action = "i
            threeparttable = TRUE,
            general_title = "Table 2: Intervention model and Economic parameters used in this study",
            title_format = "bold") 
-table_3
+# save by copying to clipboard or by zooming out in viewer and taking a screenshot 
+table_2_1
 
-## table 1 supplementary
+## table 3
 
 table_3_averted <- data.frame(
   Intervention = c("<b><i>Base scenario<i></b>", "","","","<b><i>Palivizumab</i></b>", "","", "", "<b><i>Niservimab</i></b>", "", "",
@@ -133,34 +134,34 @@ table_3_averted <- data.frame(
                   "","0-4 years", "5-64 years", "65+",
                   "","0-4 years","5-64 years", "65+",
                   "","0-4 years","5-64 years",  "65+"),
-  'Base cases' = c("","1535069", "497465", "10542", 
+  'Base cases' = c("","1621452", "420636", "9426", 
                      "","", "", "",
                      "","", "", "",
                      "","", "", "",
                      "","","",""),
   
   'Cases averted' = c("","0","0","0",
-                      "","4511", "820", "16", 
-                      "","30090", "5183","78",
-                      "","10522", "107", "21",
-                      "","29", "19","127"),
+                      "","1004", "66", "0", 
+                      "","12958", "657","-8",
+                      "","4410", "-41", "-1",
+                      "","-6", "-2","60"),
   
   'GP consultations averted' = c("","0","0","0",
-                                 "","27",  "13",  "0", 
-                                 "","181", "143", "1",
-                                 "","63",  "1", "0",
-                                 "","0", "0", "2"),
+                                 "","6",  "1",  "0", 
+                                 "","78", "11", "0",
+                                 "","27",  "0", "0",
+                                 "","0", "0", "1"),
   
   'Hospital admissions averted' = c("","0","0","0",
-                                    "","18","0", "0",
-                                    "","120", "2", "0",
-                                    "","42", "1", "0",
+                                    "","4","0", "0",
+                                    "","52", "0", "0",
+                                    "","18", "0", "0",
                                     "","0", "0", "0"),
   
   'Deaths averted' = c("","0","0","0",
                        "","0", "0", "0",
-                       "","2", "0", "0",
                        "","1", "0", "0",
+                       "","0", "0", "0",
                        "","0", "0","0") 
 )
 
@@ -182,5 +183,6 @@ table_3_averted <- kable(table_3_averted, "html", booktabs = TRUE,escape = FALSE
            general_title = "Table 3: Seasonal number of RSV cases, GP consulations, hospital admissions and deaths averted per intervention by age group",
            title_format = "bold") 
 
-table_3_averted
+# save by copying to clipboard or by zooming out in viewer and taking a screenshot 
+table_3
 

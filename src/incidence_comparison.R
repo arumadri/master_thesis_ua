@@ -8,23 +8,19 @@ library(pacman)
 pacman::p_load(tidyverse, patchwork)
 
 # extract incidence for 1 year from results_base
-annual_incidence(results_base)
+round(new_cases(results_base), digits = 0) # incidence 
+
 # prepare data from results_base
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
-  Incidence = c(1531380.51, 494402.44, 10430.79),  # incidence 
-  Population = c(2717451, 41165080, 9502007) # population at risk for each age group
-)
+  Incidence = c(1621452, 420636, 9426))
 
-# Calculate incidence per 100,000 population at risk
+# factor age 
 incidence_model <- incidence_model %>%
-  mutate(
-    Incidence_per_100k = (Incidence / Population) * 100000,  # Adjusting calculation to be per 100k of at-risk population
-    Age_Group = factor(Age_Group, levels = c("65+yr", "5-64yr", "0-4yr"))
-    )
+  mutate(Age_Group = factor(Age_Group, levels = c("65+yr", "5-64yr", "0-4yr")))
 
 # plot
-expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_per_100k, fill = Age_Group)) +
+expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence, fill = Age_Group)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
   scale_fill_manual(values = c("0-4yr" = "#f98f88", "5-64yr" = "#21c352", "65+yr" = "#629dff"), 
                     name = "",  
@@ -32,7 +28,7 @@ expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence_p
                     breaks = c("0-4yr", "5-64yr", "65+yr")) +
   labs(title = "Annual Burden by Age Group",
        x = "",
-       y = "Annual incidence of RSV infection per 100,000",
+       y = "Annual incidence of RSV infection",
        tag = "E") +
   theme_minimal() +
   theme(

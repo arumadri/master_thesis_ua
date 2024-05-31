@@ -359,11 +359,11 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
     geom_hline(aes(yintercept = 9900), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 620), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 3.31), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 7380), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 446), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 2.38), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 489), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 2.63), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 7500), data = subset(annual_incidence_0, state == "E01"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 360), data = subset(annual_incidence_0, state == "E02"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1.93), data = subset(annual_incidence_0, state == "E03"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 0",
          x = "Time (years)",
          y = "Population",
@@ -395,12 +395,12 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
   annual_incidence_1 <- ggplot(annual_incidence_1, aes(x = time, y = value, color = state)) +
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
-    geom_hline(aes(yintercept = 8040), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 2880), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 48.8), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 5500), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 1920), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 32), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 8465), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 2375), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 41.7), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 5885), data = subset(annual_incidence_1, state == "E11"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 1605), data = subset(annual_incidence_1, state == "E12"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 27.8), data = subset(annual_incidence_1, state == "E13"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 1",
          x = "Time (years)",
          y = "",
@@ -431,12 +431,12 @@ plot_incidence <- function(ode_output, programme_name, subtitle){
   annual_incidence_2 <- ggplot(annual_incidence_2, aes(x = time, y = value, color = state)) +
     geom_line() +
     geom_vline(xintercept = 2190, linetype = "dashed", color = "red") +
-    geom_hline(aes(yintercept = 7290), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 5500), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 146.5), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dotdash") +
-    geom_hline(aes(yintercept = 3820), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 2760), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dashed") +
-    geom_hline(aes(yintercept = 72), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 8050), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 4670), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 131), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dotdash") +
+    geom_hline(aes(yintercept = 4230), data = subset(annual_incidence_2, state == "E21"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 2380), data = subset(annual_incidence_2, state == "E22"), color = "black", linetype = "dashed") +
+    geom_hline(aes(yintercept = 65), data = subset(annual_incidence_2, state == "E23"), color = "black", linetype = "dashed") +
     labs(title = "Exposure level 2",
          x = "Time (years)",
          y = "Population",
@@ -658,24 +658,10 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
 }
 
 new_cases <- function(ode_output){
-  start_scenario <- (6*365 + 1) 
-  end_scenario <- 3650 
+  start_scenario <- (6*365 + 274) # 1st October
+  end_scenario <- 2830 # end of season 
   
   relevant_data <- ode_output[start_scenario:end_scenario, ]
-  
-  daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
-  daily_changes_df <- as.data.frame(daily_changes)
-  
-  new_cases <- colSums(daily_changes)
-  
-  return(new_cases)
-}
-
-annual_incidence <- function(ode_output){
-  start_incidence <- (8*365 + 1) # using 8th year after model stabilization and scenario analysis to estimate annual incidence
-  end_incidence <- 3285 # one year 
-  
-  relevant_data <- ode_output[start_incidence:end_incidence, ]
   
   daily_changes <- diff(relevant_data[,c("Z1", "Z2", "Z3")])
   daily_changes_df <- as.data.frame(daily_changes)
