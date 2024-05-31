@@ -1,6 +1,6 @@
 rm(list = ls())
 ############################ parameters #####################
-params_age <- list(b1       = 1.998,                            # relative amplitude
+params_check <- list(b1     = 1.998,                            # relative amplitude
                phi          = 0.614,                            # seasonal offset/peak transmission seasonal
                psi          = 0.236,                            # width of seasonal peak/standard deviation
                sigma        = 1/4.98,                           # susceptibility to primary infection
@@ -24,21 +24,21 @@ params_age <- list(b1       = 1.998,                            # relative ampli
                waning_rate1 = 0,                                # vaccine-induced waning rate, age group 1
                waning_rate2 = 0,                                # vaccine-induced waning rate, age group 2
                waning_rate3 = 0,                                # vaccine-induced waning rate, age group 3
-               uptake1      = 0.8,                              # uptake rate of intervention, age group 1
-               uptake2      = 0.8,                              # uptake rate of intervention, age group 2
-               uptake3      = 0.8,                              # uptake rate of intervention, age group 3
-               vac_eff1     = 0.6,                              # vaccine efficacy, age group 1
-               vac_eff2     = 0.6,                              # vaccine efficacy, age group 2
-               vac_eff3     = 0.6                               # vaccine efficacy, age group 3
+               uptake1      = 0,                                # uptake rate of intervention, age group 1
+               uptake2      = 0,                                # uptake rate of intervention, age group 2
+               uptake3      = 0,                                # uptake rate of intervention, age group 3
+               vac_eff1     = 0,                                # vaccine efficacy, age group 1
+               vac_eff2     = 0,                                # vaccine efficacy, age group 2
+               vac_eff3     = 0                                 # vaccine efficacy, age group 3
                
 )
+calculate_gamma(params = params_check)
 
-calculate_gamma(params_age)
 ############################ age adjustment initial states##################### 
-state_initial_age <- c(M=c(0,0,0), S0=c(100,50,20), E0=c(0,0,0), A0=c(0,0,0), I0=c(0,0,0),  R0=c(0,0,0), V0 = c(0,0,0),
-                       S1=c(0,0,0), E1=c(0,0,0), A1=c(0,0,0), I1=c(0,0,0),  R1=c(0,0,0), V1 = c(0,0,0),
-                       S2=c(0,0,0), E2=c(0,0,0), A2=c(0,0,0), I2=c(0,0,0),  R2=c(0,0,0), V2 = c(0,0,0),
-                       S3=c(0,0,0), E3=c(0,0,0), A3=c(0,0,0), I3=c(0,0,0),  R3=c(0,0,0), V3 = c(0,0,0),
+state_initial_check <- c(M=c(100,50,20), S0=c(100,50,20), E0=c(100,50,20), A0=c(100,50,20), I0=c(100,50,20),  R0=c(100,50,20), V0 = c(0,0,0),
+                       S1=c(100,50,20), E1=c(100,50,20), A1=c(100,50,20), I1=c(100,50,20),  R1=c(100,50,20), V1 = c(0,0,0),
+                       S2=c(100,50,20), E2=c(100,50,20), A2=c(100,50,20), I2=c(100,50,20),  R2=c(100,50,20), V2 = c(0,0,0),
+                       S3=c(100,50,20), E3=c(100,50,20), A3=c(100,50,20), I3=c(100,50,20),  R3=c(100,50,20), V3 = c(0,0,0),
                        Z=c(0,0,0))
 ############################ function to update_ages #####################
 update_ages <- function(pop,age_r){
@@ -48,39 +48,39 @@ update_ages <- function(pop,age_r){
   return(list(P=P,dP=dP))
 }
 ############################ rsv model age updated function #####################
-rsv_model_age <- function(t, state_initial_age, params){
+rsv_model_check <- function(t, state_initial_check, params){
   #  with(as.list(c(state_initial,params)),{
-  M  = state_initial_age[grepl('M',names(state_initial_age))]
+  M  = state_initial_check[grepl('M',names(state_initial_check))]
   
-  S0 = state_initial_age[grepl('S0',names(state_initial_age))]
-  E0 = state_initial_age[grepl('E0',names(state_initial_age))]
-  A0 = state_initial_age[grepl('A0',names(state_initial_age))]
-  I0 = state_initial_age[grepl('I0',names(state_initial_age))]
-  R0 = state_initial_age[grepl('R0',names(state_initial_age))]
-  V0 = state_initial_age[grepl('V0',names(state_initial_age))]
+  S0 = state_initial_check[grepl('S0',names(state_initial_check))]
+  E0 = state_initial_check[grepl('E0',names(state_initial_check))]
+  A0 = state_initial_check[grepl('A0',names(state_initial_check))]
+  I0 = state_initial_check[grepl('I0',names(state_initial_check))]
+  R0 = state_initial_check[grepl('R0',names(state_initial_check))]
+  V0 = state_initial_check[grepl('V0',names(state_initial_check))]
   
-  S1 = state_initial_age[grepl('S1',names(state_initial_age))]
-  E1 = state_initial_age[grepl('E1',names(state_initial_age))]
-  A1 = state_initial_age[grepl('A1',names(state_initial_age))]
-  I1 = state_initial_age[grepl('I1',names(state_initial_age))]
-  R1 = state_initial_age[grepl('R1',names(state_initial_age))]
-  V1 = state_initial_age[grepl('V1',names(state_initial_age))]
+  S1 = state_initial_check[grepl('S1',names(state_initial_check))]
+  E1 = state_initial_check[grepl('E1',names(state_initial_check))]
+  A1 = state_initial_check[grepl('A1',names(state_initial_check))]
+  I1 = state_initial_check[grepl('I1',names(state_initial_check))]
+  R1 = state_initial_check[grepl('R1',names(state_initial_check))]
+  V1 = state_initial_check[grepl('V1',names(state_initial_check))]
   
-  S2 = state_initial_age[grepl('S2',names(state_initial_age))]
-  E2 = state_initial_age[grepl('E2',names(state_initial_age))]
-  A2 = state_initial_age[grepl('A2',names(state_initial_age))]
-  I2 = state_initial_age[grepl('I2',names(state_initial_age))]
-  R2 = state_initial_age[grepl('R2',names(state_initial_age))]
-  V2 = state_initial_age[grepl('V2',names(state_initial_age))]
+  S2 = state_initial_check[grepl('S2',names(state_initial_check))]
+  E2 = state_initial_check[grepl('E2',names(state_initial_check))]
+  A2 = state_initial_check[grepl('A2',names(state_initial_check))]
+  I2 = state_initial_check[grepl('I2',names(state_initial_check))]
+  R2 = state_initial_check[grepl('R2',names(state_initial_check))]
+  V2 = state_initial_check[grepl('V2',names(state_initial_check))]
   
-  S3 = state_initial_age[grepl('S3',names(state_initial_age))]
-  E3 = state_initial_age[grepl('E3',names(state_initial_age))]
-  A3 = state_initial_age[grepl('A3',names(state_initial_age))]
-  I3 = state_initial_age[grepl('I3',names(state_initial_age))]
-  R3 = state_initial_age[grepl('R3',names(state_initial_age))]
-  V3 = state_initial_age[grepl('V3',names(state_initial_age))]
+  S3 = state_initial_check[grepl('S3',names(state_initial_check))]
+  E3 = state_initial_check[grepl('E3',names(state_initial_check))]
+  A3 = state_initial_check[grepl('A3',names(state_initial_check))]
+  I3 = state_initial_check[grepl('I3',names(state_initial_check))]
+  R3 = state_initial_check[grepl('R3',names(state_initial_check))]
+  V3 = state_initial_check[grepl('V3',names(state_initial_check))]
   
-  Z  = state_initial_age[grepl('Z',names(state_initial_age))]
+  Z  = state_initial_check[grepl('Z',names(state_initial_check))]
   
   # parameters 
   propR  = params[['propR']]
@@ -194,30 +194,30 @@ rsv_model_age <- function(t, state_initial_age, params){
   # vaccination
   # get day of the year
   t1 = t %% 365
-  
+
   year_length = 365
-  vac_day = 274  # 1st October, start of RSV season in UK, assumption is that eligible individuals are vaccinated by this date  
-  start_year = 6 
-  end_year = 7  # intervention for one season 
-  
+  vac_day = 274  # 1st October, start of RSV season in UK, assumption is that eligible individuals are vaccinated by this date
+  start_year = 0
+  end_year = 1  # intervention for one season
+
   # start and end day for vaccination
   start_vaccination_day = vac_day + (start_year * year_length)
   end_vaccination_day = (end_year * year_length)
-  
+
   if (t >= start_vaccination_day && t <= end_vaccination_day && abs(t1 - vac_day) <= 1) {
-    
+
     dS0_vac = (S0 * uptake* vac_eff)
     dS0     = dS0 - dS0_vac
     dV0     = dV0 + dS0_vac
-    
+
     dS1_vac = (S1 * uptake* vac_eff)
     dS1     = dS1 - dS1_vac
     dV1     = dV1 + dS1_vac
-    
+
     dS2_vac = (S2 * uptake* vac_eff)
     dS2     = dS2 - dS2_vac
     dV2     = dV2 + dS2_vac
-    
+
     # dS3_vac = (S3 * uptake* vac_eff)  ## exclude vaccination in exposure level 3
     # dS3     = dS3 - dS3_vac
     # dV3     = dV3 + dS3_vac
@@ -271,18 +271,32 @@ rsv_model_age <- function(t, state_initial_age, params){
   #})
 }
 
-## checking age
-# set all health parameters = 0 and comment out vaccination implementation code in model, line 198:223
-params_age[1:18] <- 0
-params_age[25:31] <- 0
-params_age$age_r_1 <- 0
-params_age$age_r_2 <- 0
-params_age$age_r_3 <- 0
+## 1. checking vaccination
+# health parameters = 0, aging_rate = 0, only change intervention (t=274)
+params_check <- params
+params_check[1:18] <- 0
+params_check$age_r_1 <- 0
+params_check$age_r_2 <- 0
+params_check$age_r_3 <- 0
+params_check$d0 <- 0
+params_check$gamma0 <- 0
+params_check$gamma1 <- 0
+params_check$gamma2 <- 0
+params_check$gamma3 <- 0
 
 # check vaccination implementation
+matrix(unlist(rsv_model_check(274,state_initial_check,params_check)),ncol=3,byrow = T) 
+
+# above = movement out of susceptible compartment into vaccinated compartments, no vaccination in exposure level 3, hence no movement 
+
+## 2. checking health 
+# To check health, comment out the vaccination implementation code in model, line 198:223, set aging = 0
+params_check <- params
+params_check$age_r_1 <- 0
+params_check$age_r_2 <- 0
+params_check$age_r_3 <- 0
+
+# check health implementation
 matrix(unlist(rsv_model_check(365,state_initial_check,params_check)),ncol=3,byrow = T) 
 
-# above = only aging, no health changes, no vaccination hence no movement in vaccination compartments (7,13,19,25)
-
-
-
+# above = only health changes, no aging, no vaccination hence no movement in vaccination compartments (7,13,19,25)
