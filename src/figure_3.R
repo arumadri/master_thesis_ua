@@ -11,22 +11,17 @@ pacman::p_load(tidyverse, viridisLite, viridis, patchwork)
 # table 3_1 cost-effect
 table_3_1 <- data.frame(
   Intervention = c("Palivizumab", "Niservimab", "Maternal vaccine","Elderly vaccine"),
-  'Symptomatic/GP ' = c(40,325,64,2),
-  'Hosp admission ' = c(18,122,43,0), 
-  'Death' = c(0,2,1,0),
-  'Life years gained' = c(0,170,85,0),
-  'Incr cost GP' = c(121585218, 17079909,100772955, 103668),
-  'Incr cost hosp'= c(121566854,16959581,100729049,103740),
+  'Symptomatic/GP ' = c(7,89,27,1),
+  'Hosp admission ' = c(4,52,18,0), 
+  'Death' = c(0,1,0,0),
+  'Life years gained' = c(0,85,0,0),
+  'Incr cost' = c(340103182, 20628934,100754483, 124946),
   'Age group' = c('0-4 years','5-64 years','65+', "0"),
   'No of cases' = c(5347,35351,10650,175),
-  'No hosp' = c(18,122,43,0),
-  'No death'= c(0, 2,1,0),
-  'No GP' = c(40,325,64,2)
+  'No hosp' = c(4,52,18,0),
+  'No death'= c(0,1,0,0),
+  'No GP' = c(7,89,27,1)
 )
-
-# save current table 3_1 as table 3_2 to avoid losing data
-### save so it doesnt get overridden by table_3
-write.csv(table_3_1, file = "table_3_2.csv")
 
 # prepare 
 long_data_3 <- table_3_1 %>%
@@ -60,7 +55,7 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
         strip.text.x = element_text(size = 5)) 
 
 # plot number of cases by intervention
-table_3_arrange <- table_3_2 %>%
+table_3_arrange <- table_3_1 %>%
   arrange(desc(No.of.cases)) %>%
   mutate(Intervention = factor(Intervention, levels = unique(Intervention)))
 
@@ -91,13 +86,13 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
         plot.tag=element_text(face="bold")) 
 
 # plot costs 
-table_3_3 <- table_3_2 %>%
+table_3_3 <- table_3_1 %>%
   # filter(Intervention != "Elderly vaccine") %>%
   mutate(
-    Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost.GP / Symptomatic.GP., 0),
-    Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost.hosp / Hosp.admission., 0),
-    Cost_per_Death = ifelse(Death > 0, 121585218 / Death, 0),  
-    Cost_per_Life_Year_Gained = c(4259717,86946,67561.83,0,0,0,0,0,0,0,0,0))
+    Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost / Symptomatic.GP., 0),
+    Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost / Hosp.admission., 0),
+    Cost_per_Death = ifelse(Death > 0, Incr.cost / Death, 0),  
+    Cost_per_Life_Year_Gained = ifelse(Life.years.gained > 0, Incr.cost / Life.years.gained, 0))
 
 
 # transform the costs 
@@ -121,9 +116,9 @@ incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.38, y = 4e6, label = "£52,554 (lowest ICER, per GP visit with Niservimab)", vjust = -0.5, color = "black", size = 4) +
-  geom_segment(aes(x = 1.5, y = 2.5e6, xend = 1.5, yend = 20000), 
-               arrow = arrow(type = "closed", length = unit(0.15, "inches")), color = "black") +
+  annotate("text", x = 1.38, y = 4.5e7, label = "£124,946 (lowest ICER, per GP visit with Elderly vaccine)", vjust = -0.5, color = "black", size = 4) +
+  geom_segment(aes(x = 1.5, y = 2.5e7, xend = 1.5, yend = 20000), 
+               arrow = arrow(type = "open", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5, size = 14),
