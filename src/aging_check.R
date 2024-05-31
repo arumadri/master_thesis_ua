@@ -33,7 +33,21 @@ params_age <- list(b1       = 1.998,                            # relative ampli
                
 )
 
+calculate_gamma <- function(params) {
+  
+  # parameters from list
+  g0 = params_age[['g0']]
+  g1 = params_age[['g1']]
+  g2 = params_age[['g2']]
+  
+  # new parameters
+  params_age[['gamma0']] <<- 1/g0
+  params_age[['gamma1']] <<- 1/(g0*g1)
+  params_age[['gamma2']] <<- 1/(g0*g1*g2)
+  
+}
 calculate_gamma(params_age)
+
 ############################ age adjustment initial states##################### 
 state_initial_age <- c(M=c(0,0,0), S0=c(100,50,20), E0=c(0,0,0), A0=c(0,0,0), I0=c(0,0,0),  R0=c(0,0,0), V0 = c(0,0,0),
                        S1=c(0,0,0), E1=c(0,0,0), A1=c(0,0,0), I1=c(0,0,0),  R1=c(0,0,0), V1 = c(0,0,0),

@@ -24,14 +24,27 @@ params_check <- list(b1     = 1.998,                            # relative ampli
                waning_rate1 = 0,                                # vaccine-induced waning rate, age group 1
                waning_rate2 = 0,                                # vaccine-induced waning rate, age group 2
                waning_rate3 = 0,                                # vaccine-induced waning rate, age group 3
-               uptake1      = 0,                                # uptake rate of intervention, age group 1
-               uptake2      = 0,                                # uptake rate of intervention, age group 2
-               uptake3      = 0,                                # uptake rate of intervention, age group 3
-               vac_eff1     = 0,                                # vaccine efficacy, age group 1
-               vac_eff2     = 0,                                # vaccine efficacy, age group 2
-               vac_eff3     = 0                                 # vaccine efficacy, age group 3
+               uptake1      = 0.8,                                # uptake rate of intervention, age group 1
+               uptake2      = 0.8,                                # uptake rate of intervention, age group 2
+               uptake3      = 0.8,                                # uptake rate of intervention, age group 3
+               vac_eff1     = 0.6,                                # vaccine efficacy, age group 1
+               vac_eff2     = 0.6,                                # vaccine efficacy, age group 2
+               vac_eff3     = 0.6                                 # vaccine efficacy, age group 3
                
 )
+calculate_gamma <- function(params) {
+  
+  # parameters from list
+  g0 = params_check[['g0']]
+  g1 = params_check[['g1']]
+  g2 = params_check[['g2']]
+  
+  # new parameters
+  params_check[['gamma0']] <<- 1/g0
+  params_check[['gamma1']] <<- 1/(g0*g1)
+  params_check[['gamma2']] <<- 1/(g0*g1*g2)
+  
+}
 calculate_gamma(params = params_check)
 
 ############################ age adjustment initial states##################### 
@@ -273,7 +286,6 @@ rsv_model_check <- function(t, state_initial_check, params){
 
 ## 1. checking vaccination
 # health parameters = 0, aging_rate = 0, only change intervention (t=274)
-params_check <- params
 params_check[1:18] <- 0
 params_check$age_r_1 <- 0
 params_check$age_r_2 <- 0
@@ -287,7 +299,7 @@ params_check$gamma3 <- 0
 # check vaccination implementation
 matrix(unlist(rsv_model_check(274,state_initial_check,params_check)),ncol=3,byrow = T) 
 
-# above = movement out of susceptible compartment into vaccinated compartments, no vaccination in exposure level 3, hence no movement 
+# above = movement out of susceptible compartment (2,8,14) into vaccinated compartments (7,13,19), no vaccination in exposure level 3, hence no movement 
 
 ## 2. checking health 
 # To check health, comment out the vaccination implementation code in model, line 198:223, set aging = 0
