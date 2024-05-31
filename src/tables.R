@@ -125,7 +125,7 @@ table_2_1
 
 ## table 3
 
-table_3_averted <- data.frame(
+table_3 <- data.frame(
   Intervention = c("<b><i>Base scenario<i></b>", "","","","<b><i>Palivizumab</i></b>", "","", "", "<b><i>Niservimab</i></b>", "", "",
                    "", "<b><i>Abrysvo/maternal vaccine</i></b>", "", "", "","<b><i>Abrysvo/elderly vaccine</i></b>",
                    "", "", ""),
@@ -165,7 +165,7 @@ table_3_averted <- data.frame(
                        "","0", "0","0") 
 )
 
-table_3_averted <- kable(table_3_averted, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Base cases", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
+table_3<- kable(table_3, "html", booktabs = TRUE,escape = FALSE, na.action = "insert", col.names = c("Intervention", "Age group", "Base cases", "Cases averted", "GP consultations averted", "Hospital admissions averted", "Deaths averted")) %>%
   kable_styling(font_size = 11, full_width = FALSE ,bootstrap_options = c("striped", "hover")) %>%
   row_spec(0, bold = TRUE, color = "black", background = "#fde4e2", extra_css = "border-bottom: 1px solid #000;") %>% 
   row_spec(c(2,4,6,8,10,12,14,16,18,20), color = "black", background = "#fde4e2") %>% 
