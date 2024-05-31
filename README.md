@@ -11,7 +11,7 @@ Structure of RSV model used for this study.
 # Implementation guide 
 *Quick instructions*
 
-Clone the repository and look through the RMarkdown files in the /vingettes folder for implementation steps.
+Clone the repository and look through the RMarkdown file in the /vingettes folder for implementation steps.
 
 ## Overview of files 
 ### /data folder 
