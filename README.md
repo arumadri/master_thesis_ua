@@ -34,7 +34,7 @@ Clone the repository and look through the RMarkdown file in the /vingettes folde
 + `check_health_vac.R`, a walkthrough to assess the implementation of the epidemiological and vaccination process of the model.
 + `figure_3.R`, plotting function for figure 3 in the main outputs.
 + `generate_initial_states.R`, a walkthrough of generating the initial states.
-+ `incidence_comparison.R`, plotting function for figure 1 in the main outputs.
++ `annual_incidence.R`, plotting function for figure 1 in the main outputs.
 + `scenarios_cost_effect.R`, a walkthrough of estimating the impact of the intervention strategies and their cost-effectiveness
 + `tables.R`, a walkthrough of generating all tables in the study.
 
