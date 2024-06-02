@@ -29,7 +29,7 @@ Clone the repository and look through the RMarkdown file in the /vingettes folde
 + `RunInterventions.R`, contains all the funtions used for the analysis, generating tables and figures.
 + `rsv_model_merged.R`, is the age-stratified RSV model used in the analysis.
 
-### /src folder 
+### /main folder 
 + `aging_check.R`, a walkthrough to assess the implementation of the aging process in the model.
 + `check_health_vac.R`, a walkthrough to assess the implementation of the epidemiological and vaccination process of the model.
 + `figure_3.R`, plotting function for figure 3 in the main outputs.
