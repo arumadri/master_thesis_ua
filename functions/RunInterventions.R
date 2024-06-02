@@ -539,8 +539,8 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
     scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
-                       labels = c("1","4", "7", "10", "")  ) +
-    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+                       labels = c("Oct","Jan", "Apr", "Jul", "")  ) +
+    theme(axis.text.x=element_text(family="sans",size=10, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
@@ -568,8 +568,8 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
     scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
-                       labels = c("1","4", "7", "10", "")  ) +
-    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+                       labels = c("Oct","Jan", "Apr", "Jul", "")  )  +
+    theme(axis.text.x=element_text(family="sans",size=10, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
@@ -597,8 +597,8 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
     scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
-                       labels = c("1","4", "7", "10", "")  ) +
-    theme(axis.text.x=element_text(family="sans",size=13, color = "black"),
+                       labels = c("Oct","Jan", "Apr", "Jul", "")  ) +
+    theme(axis.text.x=element_text(family="sans",size=10, color = "black"),
           axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
@@ -628,9 +628,9 @@ plot_incidence_annual <- function(ode_output, programme_name, subtitle){
     facet_wrap(~state, scales = "free_y") +
     theme_classic() +
     scale_x_continuous(limits = c(2565,2940), breaks = seq(2565,2940,90),
-                       labels = c("1","4", "7", "10", "") ) +
-    theme(axis.text.x=element_text(family="sans",size=12, color = "black"),
-          axis.text.y=element_text(family="sans",size=12, color = "black"),
+                       labels = c("Oct","Jan", "Apr", "Jul", "")  )  +
+    theme(axis.text.x=element_text(family="sans",size=10, color = "black"),
+          axis.text.y=element_text(family="sans",size=13, color = "black"),
           legend.text=element_text(family="sans",size=13, color = "black"),
           legend.title=element_text(family="sans",size=13, color = "black"),
           axis.title.x = element_text(hjust = 1, vjust = 1),

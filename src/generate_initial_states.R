@@ -1,12 +1,16 @@
 # start 
 rm(list = ls())
 setwd("/Users/vincentarumadri/Desktop/Epi/Modelling/master_thesis_ua")
-library(here)
-library(deSolve)
-library(patchwork)
-library(tidyverse)
-library(knitr)
-library(kableExtra)
+
+# packages 
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+
+library(pacman)
+
+pacman::p_load(here, deSolve, tidyverse, patchwork, knitr, kableExtra, grid, gridExtra)
+
 # From Hodgson et al 2020 
 load(here::here("data/uk_data_sum.RData"))
 load(here::here("data/posteriors.Rda"))

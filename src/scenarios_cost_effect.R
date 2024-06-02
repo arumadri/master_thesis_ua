@@ -1,5 +1,5 @@
 # scenarios
-# try 1 year
+# 1 year
 ############################ run scenarios #####################
 
 if (!requireNamespace("pacman", quietly = TRUE)) {
@@ -21,9 +21,9 @@ params_none$waning_rate3 <- 0
 params_none$uptake1      <- 0                              
 params_none$uptake2      <- 0                                
 params_none$uptake3      <- 0                                
-params_none$vac_eff1         <- 0                                 
-params_none$vac_eff2         <- 0                                    
-params_none$vac_eff3         <- 0
+params_none$vac_eff1     <- 0                                 
+params_none$vac_eff2     <- 0                                    
+params_none$vac_eff3     <- 0
 
 ## scenario analysis 
 # base: no intervention
@@ -31,7 +31,7 @@ results_base <- ode(y = state_initial_age, times = time_ode, func = rsv_model_ag
                         parms = params_none, method = "ode23")
 
 # no. of cases 
-round(new_cases(results_base), digits = 0) # 1621452  420636    9426
+round(new_cases(results_base), digits = 0) # 1621452  420636    9426 
 # averted c(0,0,0)
 
 # plot model performance over time horizon
@@ -53,14 +53,14 @@ params_pmab$waning_rate3 <- 0
 params_pmab$uptake1      <- 0.9                              
 params_pmab$uptake2      <- 0                                
 params_pmab$uptake3      <- 0                                
-params_pmab$vac_eff1         <- 0.338                                  
-params_pmab$vac_eff2         <- 0                                    
-params_pmab$vac_eff3         <- 0
+params_pmab$vac_eff1     <- 0.338                                  
+params_pmab$vac_eff2     <- 0                                    
+params_pmab$vac_eff3     <- 0
 
 results_pmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_pmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_pmab), digits = 0)  # 1621452  420636    9426
+round(new_cases(results_pmab), digits = 0)  # 1621452  420636    9426 
 ## 1620448  420570    9426 
 # averted c(1004, 66,0)
 
@@ -76,14 +76,14 @@ params_nmab$waning_rate3 <- 0
 params_nmab$uptake1      <- 0.9                            
 params_nmab$uptake2      <- 0                                
 params_nmab$uptake3      <- 0                                
-params_nmab$vac_eff1         <- 0.781                                   
-params_nmab$vac_eff2         <- 0                                    
-params_nmab$vac_eff3         <- 0
+params_nmab$vac_eff1     <- 0.781                                   
+params_nmab$vac_eff2     <- 0                                    
+params_nmab$vac_eff3     <- 0
 
 results_nmab <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_nmab, method = "ode23")
 # no. of cases 
-round(new_cases(results_nmab), digits = 0) # 1621452  420636    9426
+round(new_cases(results_nmab), digits = 0) # 1621452  420636    9426 
 ## 1608494  419979    9434 
 # averted c(12958, 657, -8)
 
@@ -99,15 +99,15 @@ params_mat$waning_rate3 <- 0
 params_mat$uptake1      <- 0.6*0.5   # 0.5 = proportion of newborns in 0-4 year age group pop. (679995/1496623)                           
 params_mat$uptake2      <- 0.6*0.2  # 0.2 = proportion of pregnant women in 5-64 year age group pop. (679995/4120037.8)                          
 params_mat$uptake3      <- 0                                
-params_mat$vac_eff1         <- 0.513                                 
-params_mat$vac_eff2         <- 0.717                                   
-params_mat$vac_eff3         <- 0
+params_mat$vac_eff1     <- 0.513                                 
+params_mat$vac_eff2     <- 0.717                                   
+params_mat$vac_eff3     <- 0
 
 results_mat <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                     parms = params_mat, method = "ode23")
 
 # no. of cases 
-round(new_cases(results_mat), digits = 0) # 1621452  420636    9426
+round(new_cases(results_mat), digits = 0) # 1621452  420636    9426 
 ## 1617042  420677    9427 
 # averted c(4410, -41, -1)
 
@@ -123,14 +123,14 @@ params_old$waning_rate3 <- 1/180
 params_old$uptake1      <- 0                                
 params_old$uptake2      <- 0                               
 params_old$uptake3      <- 0.7                                
-params_old$vac_eff1         <- 0                                   
-params_old$vac_eff2         <- 0                                    
-params_old$vac_eff3         <- 0.667
+params_old$vac_eff1     <- 0                                   
+params_old$vac_eff2     <- 0                                    
+params_old$vac_eff3     <- 0.667
 
 results_old <- ode(y = state_initial_age, times = time_ode, func = rsv_model_age,
                    parms = params_old, method = "ode23")
 # no. of cases 
-round(new_cases(results_old), digits = 0) # 1621452  420636    9426
+round(new_cases(results_old), digits = 0) # 1621452  420636    9426 
 ## 1621458  420638    9366  
 # averted c(-6, -2,60) 
 
