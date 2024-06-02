@@ -13,7 +13,7 @@ round(new_cases(results_base), digits = 0) # incidence
 # prepare data from results_base
 incidence_model <- data.frame(
   Age_Group = c("0-4yr", "5-64yr", "65+yr"),
-  Incidence = c(1621452, 420636, 9426))
+  Incidence = c(1621452, 420636, 9426)) # to estimate incidence per 100k use population at risk for each age group c(2717451, 4116508, 9502007) 
 
 # factor age 
 incidence_model <- incidence_model %>%
@@ -26,7 +26,7 @@ expected_incidence <- ggplot(incidence_model, aes(x = Age_Group, y = Incidence, 
                     name = "",  
                     labels = c("0-4yr", "5-64yr", "65+yr"),
                     breaks = c("0-4yr", "5-64yr", "65+yr")) +
-  labs(title = "Annual Burden by Age Group",
+  labs(title = "Annual incidence by age group",
        x = "",
        y = "Annual incidence of RSV infection",
        tag = "E") +
@@ -55,7 +55,7 @@ incidence_base <- plot_incidence_annual(results_base, "", "")
 estimated_inicidence <- (incidence_base / expected_incidence)
 
 fig1 <- estimated_inicidence + plot_annotation(
-  title = "Estimated Annual Burden of RSV",
+  title = "Model estimated annual burden of RSV per age group (0-4 years, 5-64 years, 65+ years) by exposure level 0-3",
   subtitle = "",
   theme = theme(
     plot.title = element_text(family="sans",size=18, color = "black", face = "bold"),

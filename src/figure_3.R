@@ -17,7 +17,7 @@ table_3_1 <- data.frame(
   'Life years gained' = c(0,85,0,0),
   'Incr cost' = c(340103182, 20628934,100754483, 124946),
   'Age group' = c('0-4 years','5-64 years','65+', "0"),
-  'No of cases' = c(5347,35351,10650,175),
+  'No of cases' = c(1070,13617,4368,52),
   'No hosp' = c(4,52,18,0),
   'No death'= c(0,1,0,0),
   'No GP' = c(7,89,27,1)
