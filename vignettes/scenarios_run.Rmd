@@ -53,3 +53,5 @@ To generate figure 2 and figure 3, use the `annual_incidence.R` and `figure_3.R`
 Use `tables.R` to generate all tables 
 
 Note: The generated tables can be saved by copying to the clipboard and pasting to word or zooming in Viewer in RStudio taking a screenshot of the table. 
+
+## end ##
