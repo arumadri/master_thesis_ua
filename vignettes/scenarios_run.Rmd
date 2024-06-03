@@ -23,13 +23,17 @@ Follow instructions in `generate_initial_states.R` in /src folder to complete th
 source("functions/run_model_merged.R")
 
 ```
-## 4. Run scenarios and estimate cost-effectiveness
+## 4. Model logic checks
+
+To check the model logic implementation of aging, and vaccination and epidemiological movements follow the steps in `aging_check.R` and `check_health_vac.R` respectively 
+
+## 5. Run scenarios and estimate cost-effectiveness
 
 Open `scenarios_cost_effect.R` in /src folder to run scenarios. Also use this R script to generate the plots on model stabilization, and plots of incidence per intervention scenario.
 
-## 5. Plotting figures
+## 6. Plotting figures
 
-To generate figure 3, use the `figure_3.R` script in /src folder. For all the plots, you may get the error below, ignore it
+To generate figure 2 and figure 3, use the `annual_incidence.R` and `figure_3.R` script respectively in /main folder. For some plots, you may get the error below, ignore it
 ```{r, echo=TRUE}
  plot_incidence(results_base, " Base: No intervention", "base")
 
@@ -44,7 +48,7 @@ To generate figure 3, use the `figure_3.R` script in /src folder. For all the pl
 # [1] 0
 
 ```
-## 6. Generating tables 
+## 7. Generating tables 
 
 Use `tables.R` to generate all tables 
 
