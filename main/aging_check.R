@@ -293,7 +293,7 @@ params_age$age_r_1 <- 0
 params_age$age_r_2 <- 0
 params_age$age_r_3 <- 0
 
-# check vaccination implementation
+# check age implementation
 matrix(unlist(rsv_model_check(365,state_initial_check,params_check)),ncol=3,byrow = T) 
 
 # above = only aging, no health changes, no vaccination hence no movement in vaccination compartments (7,13,19,25)

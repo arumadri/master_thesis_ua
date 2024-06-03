@@ -1,6 +1,6 @@
 # start 
 rm(list = ls())
-setwd("/Users/vincentarumadri/Desktop/Epi/Modelling/master_thesis_ua")
+setwd("/Users/vincentarumadri/Desktop/Epi/Modelling/master_thesis_ua") # Set working directory to folder with cloned repository on your device 
 
 # packages 
 if (!requireNamespace("pacman", quietly = TRUE)) {
