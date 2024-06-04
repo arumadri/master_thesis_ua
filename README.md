@@ -7,7 +7,7 @@ In this project, I used mathematical modelling to assess the impact and cost-eff
 
 Structure of RSV model used for this study. 
 
-## Implementation guide 
+# Implementation guide 
 *Quick instructions*
 
 Clone the repository and look through the RMarkdown file in the /vingettes folder for implementation steps.
