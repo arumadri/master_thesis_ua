@@ -1,4 +1,3 @@
-## master_thesis_ua
 # Modelling the cost-effectiveness of RSV interventions in England and Wales. 
 RSV causes acute lower respiratory tract infections (ALRI) in people of all ages, but especially in children under 5 years and the elderly. New monoclonal antibodies, offering rapid immune protection to infants, maternal vaccines, conferring protection to infants through placental transfer of antibodies, and elderly vaccines are becoming available. Recently, a maternal vaccine (Abrysvo) and a monoclonal antibody (Nirsevimab) have demonstrated higher efficacy and duration of protection than the current prophlaxis, Palivizumab in phase 3 trials and were approved for use against RSV in infants by the U.S. FDA and European Medicines Agency in September 2023. 
 
