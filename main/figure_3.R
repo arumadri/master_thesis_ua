@@ -22,11 +22,19 @@ table_3_1 <- data.frame(
   'No death'= c(0,1,0,0),
   'No GP' = c(7,89,27,1)
 )
+custom_order <- c("Niservimab", "Maternal vaccine", "Palivizumab", "Elderly vaccine")
 
-# prepare 
+
+# data for plot C 
+table_3_arrange <- table_3_1 %>%
+  arrange(match(Intervention, custom_order)) %>%
+  mutate(Intervention = factor(Intervention, levels = custom_order))
+
+# data for plot B
 long_data_3 <- table_3_1 %>%
   select(Intervention, No.GP, No.hosp, No.death) %>%
-  gather(key = "Metric", value = "Value", -Intervention)
+  gather(key = "Metric", value = "Value", -Intervention) %>%
+  mutate(Intervention = factor(Intervention, levels = custom_order))
 
 # plot proportions
 condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Metric)) +
@@ -55,10 +63,6 @@ condition_plot <- ggplot(long_data_3, aes(x = Intervention, y = Value, fill = Me
         strip.text.x = element_text(size = 5)) 
 
 # plot number of cases by intervention
-table_3_arrange <- table_3_1 %>%
-  arrange(desc(No.of.cases)) %>%
-  mutate(Intervention = factor(Intervention, levels = unique(Intervention)))
-
 cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, fill = Intervention)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.5) +
   scale_fill_manual(values = c("Palivizumab" = "#4169E1", 
@@ -73,11 +77,11 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
         plot.subtitle = element_text(hjust = 0.5, size = 14),
         axis.title.x = element_blank(),
         axis.title.y = element_text(size = 13),
-        axis.text.x = element_blank(),
+        axis.text.x = element_text(family = "sans", size = 12, color = "black", angle = 45, hjust = 1),
         axis.text.y = element_text(family = "sans", size = 12, color = "black"),
         legend.text = element_text(family = "sans", size = 12, color = "black"),
         legend.title = element_blank(),  
-        legend.position = "right",
+        legend.position = "none",
         plot.margin = margin(10, 10, 10, 10),
         plot.background = element_rect(fill = "white", colour = "black"),
         panel.background = element_rect(fill = "white", colour = "black"),
@@ -87,7 +91,6 @@ cases_averted <- ggplot(table_3_arrange, aes(x = Intervention, y = No.of.cases, 
 
 # plot costs 
 table_3_3 <- table_3_1 %>%
-  # filter(Intervention != "Elderly vaccine") %>%
   mutate(
     Cost_per_GP_visit = ifelse(Symptomatic.GP. > 0, Incr.cost / Symptomatic.GP., 0),
     Cost_per_Hospitalization = ifelse(Hosp.admission. > 0, Incr.cost / Hosp.admission., 0),
@@ -107,6 +110,8 @@ cost_data <- table_3_3 %>%
   )) %>%
   filter(Category != "Death") 
 
+cost_data$Intervention <- factor(cost_data$Intervention, levels = c("Elderly vaccine", "Palivizumab", "Maternal vaccine", "Niservimab"))
+
 # plot
 incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)) +
   geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
@@ -116,8 +121,8 @@ incr_costs <- ggplot(cost_data, aes(x = Intervention, y = Cost, fill = Category)
   labs(title = "Incremental costs of interventions per health outcome",
        x = "", y = "Cost (£GBP)", tag = "C") +
   geom_hline(yintercept = 20000, linetype = "dashed", color = "black") + 
-  annotate("text", x = 1.38, y = 4.5e7, label = "£124,946 (lowest ICER, per GP visit with Elderly vaccine)", vjust = -0.5, color = "black", size = 4) +
-  geom_segment(aes(x = 1.5, y = 2.5e7, xend = 1.5, yend = 20000), 
+  annotate("text", x = 1, y = 4.5e7, label = "£124,946 (lowest ICER, per GP visit with Elderly vaccine)", vjust = -0.5, color = "black", size = 4) +
+  geom_segment(aes(x = 1, y = 2.5e7, xend = 1, yend = 20000), 
                arrow = arrow(type = "open", length = unit(0.15, "inches")), color = "black") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
